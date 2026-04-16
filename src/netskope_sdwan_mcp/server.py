@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .tools.applications import get_application, list_applications
 from .tools.gateways import get_gateway, list_gateways
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.segments import get_segment, list_segments
@@ -55,6 +56,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_segment")
     def _get_segment(id: str) -> dict[str, Any]:
         return get_segment(id)
+
+    @server.tool(name="list_applications")
+    def _list_applications(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_applications(filter=filter)
+
+    @server.tool(name="get_application")
+    def _get_application(id: str) -> dict[str, Any]:
+        return get_application(id)
 
     @server.tool(name="list_tenants")
     def _list_tenants(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:

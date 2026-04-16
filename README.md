@@ -1,15 +1,13 @@
 # netskope-sdwan-mcp
 
-Read-only MCP server scaffold for Netskope SD-WAN.
+Read-only MCP server for Netskope SD-WAN.
 
 This repository is separate from the SDK and is intended to use the existing
 `netskope-sdwan-py-sdk` project as its API client layer rather than making HTTP
 requests directly.
 
-## Status
-
-This is an initial project scaffold only. No MCP tool logic is implemented yet,
-and no write operations are included.
+Implemented as a thin MCP wrapper around `netskope-sdwan-py-sdk`. Only read
+operations are exposed.
 
 ## Local development
 
@@ -51,6 +49,49 @@ Run the MCP server entrypoint after installing dependencies:
 ```bash
 python -m netskope_sdwan_mcp.server
 ```
+
+## Implemented tools
+
+### Gateways
+
+- `list_gateways`
+- `get_gateway`
+
+### Gateway groups
+
+- `list_gateway_groups`
+- `get_gateway_group`
+
+### Segments
+
+- `list_segments`
+- `get_segment`
+
+### Applications
+
+- `list_applications`
+- `get_application`
+
+### Tenants
+
+- `list_tenants`
+- `get_tenant`
+
+### Users
+
+- `list_users`
+- `get_user`
+
+### User groups
+
+- `list_user_groups`
+- `get_user_group`
+
+## Example usage
+
+Ask the MCP server for gateways with a backend filter such as `status:up` using
+`list_gateways(filter="status:up")`, then inspect one result in detail with
+`get_gateway(id="...")`.
 
 ## Project layout
 
