@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from .tools.gateways import get_gateway, list_gateways
+from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.tenants import get_tenant, list_tenants
 from .tools.user_groups import get_user_group, list_user_groups
 from .tools.users import get_user, list_users
@@ -37,6 +38,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
         return get_gateway(id)
+
+    @server.tool(name="list_gateway_groups")
+    def _list_gateway_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateway_groups(filter=filter)
+
+    @server.tool(name="get_gateway_group")
+    def _get_gateway_group(id: str) -> dict[str, Any]:
+        return get_gateway_group(id)
 
     @server.tool(name="list_tenants")
     def _list_tenants(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
