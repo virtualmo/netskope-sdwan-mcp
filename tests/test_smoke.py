@@ -60,6 +60,10 @@ class SmokeTest(unittest.TestCase):
                 "list_gateways",
                 "list_address_groups",
                 "get_address_group",
+                "list_device_groups",
+                "get_device_group",
+                "list_client_templates",
+                "get_client_template",
                 "get_gateway",
                 "get_gateway_operational_snapshot",
                 "list_gateway_groups",
@@ -86,6 +90,10 @@ class SmokeTest(unittest.TestCase):
         )
         self.assertTrue(callable(server.registered_tools["list_address_groups"]))
         self.assertTrue(callable(server.registered_tools["get_address_group"]))
+        self.assertTrue(callable(server.registered_tools["list_device_groups"]))
+        self.assertTrue(callable(server.registered_tools["get_device_group"]))
+        self.assertTrue(callable(server.registered_tools["list_client_templates"]))
+        self.assertTrue(callable(server.registered_tools["get_client_template"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))

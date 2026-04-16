@@ -7,6 +7,8 @@ from typing import Any
 from .tools.address_groups import get_address_group, list_address_groups
 from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
+from .tools.client_templates import get_client_template, list_client_templates
+from .tools.device_groups import get_device_group, list_device_groups
 from .tools.gateways import (
     get_gateway,
     get_gateway_operational_snapshot,
@@ -57,6 +59,22 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_address_group")
     def _get_address_group(id: str) -> dict[str, Any]:
         return get_address_group(id)
+
+    @server.tool(name="list_device_groups")
+    def _list_device_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_device_groups(filter=filter)
+
+    @server.tool(name="get_device_group")
+    def _get_device_group(id: str) -> dict[str, Any]:
+        return get_device_group(id)
+
+    @server.tool(name="list_client_templates")
+    def _list_client_templates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_client_templates(filter=filter)
+
+    @server.tool(name="get_client_template")
+    def _get_client_template(id: str) -> dict[str, Any]:
+        return get_client_template(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
