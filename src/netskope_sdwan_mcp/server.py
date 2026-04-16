@@ -10,6 +10,7 @@ from .tools.audit_events import list_audit_events
 from .tools.ca_certificates import get_ca_certificate, list_ca_certificates
 from .tools.client_templates import get_client_template, list_client_templates
 from .tools.cloud_accounts import get_cloud_account, list_cloud_accounts
+from .tools.controllers import get_controller, list_controllers
 from .tools.device_groups import get_device_group, list_device_groups
 from .tools.gateways import (
     get_gateway,
@@ -93,6 +94,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_ca_certificate")
     def _get_ca_certificate(id: str) -> dict[str, Any]:
         return get_ca_certificate(id)
+
+    @server.tool(name="list_controllers")
+    def _list_controllers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_controllers(filter=filter)
+
+    @server.tool(name="get_controller")
+    def _get_controller(id: str) -> dict[str, Any]:
+        return get_controller(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
