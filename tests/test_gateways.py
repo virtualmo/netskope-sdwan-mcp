@@ -10,7 +10,12 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from netskope_sdwan_mcp.errors import ConfigurationError
-from netskope_sdwan_mcp.tools.gateways import get_gateway, list_gateways, serialize_gateway
+from netskope_sdwan_mcp.tools.gateways import (
+    get_gateway,
+    get_gateway_operational_snapshot,
+    list_gateways,
+    serialize_gateway,
+)
 
 
 @dataclass
@@ -92,6 +97,64 @@ class GatewayToolsTest(unittest.TestCase):
         self.assertEqual(result["name"], "Branch Gateway 1")
         self.assertEqual(result["overlay_id"], "overlay-1")
 
+    def test_get_gateway_operational_snapshot_success(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+            managed=True,
+            overlay_id="overlay-1",
+        )
+        client.v1.monitoring.get_interfaces_latest.return_value = [
+            {"name": "wan0", "status": "up"}
+        ]
+        client.v1.monitoring.get_paths_latest.return_value = [
+            {"path_id": "path-1", "state": "healthy"}
+        ]
+        client.v1.monitoring.get_routes_latest.return_value = {
+            "routes": [{"prefix": "10.0.0.0/24", "nextHop": "192.0.2.1"}]
+        }
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_operational_snapshot(
+                "gw-001",
+                child_tenant_id="tenant-child-1",
+            )
+
+        client.gateways.get.assert_called_once_with("gw-001")
+        client.v1.monitoring.get_interfaces_latest.assert_called_once_with(
+            "gw-001",
+            child_tenant_id="tenant-child-1",
+        )
+        client.v1.monitoring.get_paths_latest.assert_called_once_with(
+            "gw-001",
+            child_tenant_id="tenant-child-1",
+        )
+        client.v1.monitoring.get_routes_latest.assert_called_once_with(
+            "gw-001",
+            child_tenant_id="tenant-child-1",
+        )
+        self.assertEqual(
+            result,
+            {
+                "gateway": {
+                    "id": "gw-001",
+                    "name": "Branch Gateway 1",
+                    "managed": True,
+                    "is_activated": None,
+                    "overlay_id": "overlay-1",
+                    "created_at": None,
+                    "modified_at": None,
+                    "device_config_raw": None,
+                },
+                "interfaces_latest": [{"name": "wan0", "status": "up"}],
+                "paths_latest": [{"path_id": "path-1", "state": "healthy"}],
+                "routes_latest": {
+                    "routes": [{"prefix": "10.0.0.0/24", "nextHop": "192.0.2.1"}]
+                },
+            },
+        )
+
     def test_get_gateway_not_found_path(self) -> None:
         client = Mock()
         client.gateways.get.side_effect = NotFoundError("gateway not found")
@@ -143,6 +206,23 @@ class GatewayToolsTest(unittest.TestCase):
             result["error"]["message"],
             "Authentication failed for the Netskope SD-WAN API.",
         )
+
+    def test_get_gateway_operational_snapshot_error_path(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+        )
+        client.v1.monitoring.get_interfaces_latest.side_effect = APIResponseError(
+            "upstream failure"
+        )
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_operational_snapshot("gw-001")
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_serialize_gateway_supports_sdk_objects(self) -> None:
         gateway = FakeGateway(

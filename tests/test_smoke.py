@@ -59,6 +59,7 @@ class SmokeTest(unittest.TestCase):
             (
                 "list_gateways",
                 "get_gateway",
+                "get_gateway_operational_snapshot",
                 "list_gateway_groups",
                 "get_gateway_group",
                 "list_segments",
@@ -83,6 +84,7 @@ class SmokeTest(unittest.TestCase):
         )
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
+        self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))
         self.assertTrue(callable(server.registered_tools["list_gateway_groups"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_group"]))
         self.assertTrue(callable(server.registered_tools["list_segments"]))

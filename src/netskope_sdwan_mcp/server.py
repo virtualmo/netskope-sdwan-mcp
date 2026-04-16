@@ -6,7 +6,11 @@ from typing import Any
 
 from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
-from .tools.gateways import get_gateway, list_gateways
+from .tools.gateways import (
+    get_gateway,
+    get_gateway_operational_snapshot,
+    list_gateways,
+)
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.monitoring_v1 import (
     get_interfaces_latest,
@@ -48,6 +52,16 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
         return get_gateway(id)
+
+    @server.tool(name="get_gateway_operational_snapshot")
+    def _get_gateway_operational_snapshot(
+        id: str,
+        child_tenant_id: str = None,
+    ) -> dict[str, Any]:
+        return get_gateway_operational_snapshot(
+            id,
+            child_tenant_id=child_tenant_id,
+        )
 
     @server.tool(name="list_gateway_groups")
     def _list_gateway_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:

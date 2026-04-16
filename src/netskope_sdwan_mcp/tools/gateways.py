@@ -29,6 +29,36 @@ def get_gateway(id: str) -> dict[str, Any]:
         return _serialize_sdk_error(exc)
 
 
+def get_gateway_operational_snapshot(
+    id: str,
+    child_tenant_id: str | None = None,
+) -> dict[str, Any]:
+    """Fetch gateway details and latest operational snapshots for one gateway."""
+    try:
+        client = build_sdk_client()
+        gateway = client.gateways.get(id)
+        interfaces_latest = client.v1.monitoring.get_interfaces_latest(
+            id,
+            child_tenant_id=child_tenant_id,
+        )
+        paths_latest = client.v1.monitoring.get_paths_latest(
+            id,
+            child_tenant_id=child_tenant_id,
+        )
+        routes_latest = client.v1.monitoring.get_routes_latest(
+            id,
+            child_tenant_id=child_tenant_id,
+        )
+        return {
+            "gateway": serialize_gateway(gateway),
+            "interfaces_latest": _serialize_monitoring_payload(interfaces_latest),
+            "paths_latest": _serialize_monitoring_payload(paths_latest),
+            "routes_latest": _serialize_monitoring_payload(routes_latest),
+        }
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def serialize_gateway(gateway: Any) -> dict[str, Any]:
     """Serialize an SDK gateway model into a plain dictionary."""
     if is_dataclass(gateway):
@@ -56,6 +86,16 @@ def serialize_gateway(gateway: Any) -> dict[str, Any]:
         "modified_at": getattr(gateway, "modified_at", None),
         "device_config_raw": getattr(gateway, "device_config_raw", None),
     }
+
+
+def _serialize_monitoring_payload(
+    payload: list[dict[str, Any]] | dict[str, Any],
+) -> list[dict[str, Any]] | dict[str, Any]:
+    if isinstance(payload, dict):
+        return dict(payload)
+    if isinstance(payload, list):
+        return [dict(item) for item in payload]
+    return payload
 
 
 def _serialize_sdk_error(exc: Exception) -> dict[str, Any]:
