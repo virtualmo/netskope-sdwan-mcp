@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..client_factory import build_sdk_client
+from ..errors import serialize_tool_error
 
 
 def get_interfaces_latest(
@@ -119,15 +120,4 @@ def _serialize_monitoring_payload(
 
 
 def _serialize_sdk_error(exc: Exception) -> dict[str, Any]:
-    error_type = exc.__class__.__name__
-    status = "error"
-    if error_type == "NotFoundError":
-        status = "not_found"
-
-    return {
-        "status": status,
-        "error": {
-            "type": error_type,
-            "message": str(exc),
-        },
-    }
+    return serialize_tool_error(exc)

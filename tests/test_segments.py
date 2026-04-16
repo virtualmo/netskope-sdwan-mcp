@@ -106,8 +106,8 @@ class SegmentToolsTest(unittest.TestCase):
             result = list_segments()
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "upstream failure")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_serialize_segment_supports_sdk_objects(self) -> None:
         segment = FakeSegment(

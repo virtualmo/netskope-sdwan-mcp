@@ -6,6 +6,7 @@ from dataclasses import asdict, is_dataclass
 from typing import Any
 
 from ..client_factory import build_sdk_client
+from ..errors import serialize_tool_error
 
 
 def list_segments(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
@@ -51,15 +52,4 @@ def serialize_segment(segment: Any) -> dict[str, Any]:
 
 
 def _serialize_sdk_error(exc: Exception) -> dict[str, Any]:
-    error_type = exc.__class__.__name__
-    status = "error"
-    if error_type == "NotFoundError":
-        status = "not_found"
-
-    return {
-        "status": status,
-        "error": {
-            "type": error_type,
-            "message": str(exc),
-        },
-    }
+    return serialize_tool_error(exc)

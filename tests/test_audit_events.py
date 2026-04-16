@@ -75,7 +75,7 @@ class AuditEventToolsTest(unittest.TestCase):
             created_at_to="2026-04-16T23:59:59Z",
         )
 
-        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["status"], "invalid_request")
         self.assertEqual(result["error"]["type"], "ValueError")
         self.assertEqual(result["error"]["message"], "created_at_from is required")
 
@@ -93,8 +93,8 @@ class AuditEventToolsTest(unittest.TestCase):
             )
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "upstream failure")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_serialize_audit_event_supports_sdk_objects(self) -> None:
         audit_event = FakeAuditEvent(

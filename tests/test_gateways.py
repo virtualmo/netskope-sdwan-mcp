@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from netskope_sdwan_mcp.errors import ConfigurationError
 from netskope_sdwan_mcp.tools.gateways import get_gateway, list_gateways, serialize_gateway
 
 
@@ -30,6 +31,10 @@ class NotFoundError(Exception):
 
 class APIResponseError(Exception):
     """SDK-shaped generic API error used in tests."""
+
+
+class UnauthorizedError(Exception):
+    """SDK-shaped auth error used in tests."""
 
 
 class GatewayToolsTest(unittest.TestCase):
@@ -106,8 +111,38 @@ class GatewayToolsTest(unittest.TestCase):
             result = list_gateways()
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "upstream failure")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_list_gateways_configuration_error_path(self) -> None:
+        with patch(
+            "netskope_sdwan_mcp.tools.gateways.build_sdk_client",
+            side_effect=ConfigurationError("Missing required environment variable: NETSKOPESDWAN_API_TOKEN"),
+        ):
+            result = list_gateways()
+
+        self.assertEqual(result["status"], "configuration_error")
+        self.assertEqual(result["error"]["type"], "ConfigurationError")
+        self.assertEqual(
+            result["error"]["message"],
+            "Missing required environment variable: NETSKOPESDWAN_API_TOKEN",
+        )
+
+    def test_get_gateway_authentication_error_path(self) -> None:
+        client = Mock()
+        client.gateways.get.side_effect = UnauthorizedError(
+            "401 unauthorized authorization: Bearer secret-token"
+        )
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway("gw-001")
+
+        self.assertEqual(result["status"], "unauthorized")
+        self.assertEqual(result["error"]["type"], "AuthenticationError")
+        self.assertEqual(
+            result["error"]["message"],
+            "Authentication failed for the Netskope SD-WAN API.",
+        )
 
     def test_serialize_gateway_supports_sdk_objects(self) -> None:
         gateway = FakeGateway(

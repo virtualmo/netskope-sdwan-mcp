@@ -98,8 +98,8 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             result = get_interfaces_latest("gw-123")
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "upstream failure")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_get_paths_latest_sdk_error_path(self) -> None:
         client = Mock()
@@ -114,8 +114,8 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             result = get_paths_latest("gw-123")
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "paths unavailable")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_get_routes_latest_sdk_error_path(self) -> None:
         client = Mock()
@@ -130,8 +130,8 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             result = get_routes_latest("gw-123")
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "routes unavailable")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_get_system_load_success(self) -> None:
         client = Mock()
@@ -195,8 +195,8 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             result = get_system_load("gw-123")
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "system load unavailable")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_get_paths_links_totals_success(self) -> None:
         client = Mock()
@@ -254,8 +254,8 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             result = get_paths_links_totals("gw-123")
 
         self.assertEqual(result["status"], "error")
-        self.assertEqual(result["error"]["type"], "APIResponseError")
-        self.assertEqual(result["error"]["message"], "path totals unavailable")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
 
 if __name__ == "__main__":
