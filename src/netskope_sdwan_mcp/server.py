@@ -27,10 +27,12 @@ from .tools.monitoring_v1 import (
     get_system_load,
 )
 from .tools.ntp_configs import get_ntp_config, list_ntp_configs
+from .tools.overlay_tags import get_overlay_tag, list_overlay_tags
 from .tools.segments import get_segment, list_segments
 from .tools.tenants import get_tenant, list_tenants
 from .tools.user_groups import get_user_group, list_user_groups
 from .tools.users import get_user, list_users
+from .tools.vpn_peers import get_vpn_peer, list_vpn_peers
 
 SERVER_NAME = "netskope-sdwan-mcp"
 PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts")
@@ -120,6 +122,22 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_ntp_config")
     def _get_ntp_config(id: str) -> dict[str, Any]:
         return get_ntp_config(id)
+
+    @server.tool(name="list_overlay_tags")
+    def _list_overlay_tags(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_overlay_tags(filter=filter)
+
+    @server.tool(name="get_overlay_tag")
+    def _get_overlay_tag(id: str) -> dict[str, Any]:
+        return get_overlay_tag(id)
+
+    @server.tool(name="list_vpn_peers")
+    def _list_vpn_peers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_vpn_peers(filter=filter)
+
+    @server.tool(name="get_vpn_peer")
+    def _get_vpn_peer(id: str) -> dict[str, Any]:
+        return get_vpn_peer(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
