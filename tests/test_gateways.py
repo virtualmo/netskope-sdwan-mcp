@@ -1,0 +1,136 @@
+"""Focused tests for gateway MCP tool behavior."""
+
+from dataclasses import dataclass
+from pathlib import Path
+import sys
+from typing import Optional
+import unittest
+from unittest.mock import Mock, patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from netskope_sdwan_mcp.tools.gateways import get_gateway, list_gateways, serialize_gateway
+
+
+@dataclass
+class FakeGateway:
+    id: str
+    name: Optional[str] = None
+    managed: Optional[bool] = None
+    is_activated: Optional[bool] = None
+    overlay_id: Optional[str] = None
+    created_at: Optional[str] = None
+    modified_at: Optional[str] = None
+    device_config_raw: Optional[dict] = None
+
+
+class NotFoundError(Exception):
+    """SDK-shaped not found error used in tests."""
+
+
+class APIResponseError(Exception):
+    """SDK-shaped generic API error used in tests."""
+
+
+class GatewayToolsTest(unittest.TestCase):
+    def test_list_gateways_success(self) -> None:
+        client = Mock()
+        client.gateways.list.return_value = [
+            FakeGateway(id="gw-001", name="Branch Gateway 1", managed=True),
+            FakeGateway(id="gw-002", name="Branch Gateway 2", managed=False),
+        ]
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = list_gateways(filter="status:up")
+
+        client.gateways.list.assert_called_once_with(filter="status:up")
+        self.assertEqual(
+            result,
+            [
+                {
+                    "id": "gw-001",
+                    "name": "Branch Gateway 1",
+                    "managed": True,
+                    "is_activated": None,
+                    "overlay_id": None,
+                    "created_at": None,
+                    "modified_at": None,
+                    "device_config_raw": None,
+                },
+                {
+                    "id": "gw-002",
+                    "name": "Branch Gateway 2",
+                    "managed": False,
+                    "is_activated": None,
+                    "overlay_id": None,
+                    "created_at": None,
+                    "modified_at": None,
+                    "device_config_raw": None,
+                },
+            ],
+        )
+
+    def test_get_gateway_success(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+            managed=True,
+            overlay_id="overlay-1",
+        )
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway("gw-001")
+
+        client.gateways.get.assert_called_once_with("gw-001")
+        self.assertEqual(result["id"], "gw-001")
+        self.assertEqual(result["name"], "Branch Gateway 1")
+        self.assertEqual(result["overlay_id"], "overlay-1")
+
+    def test_get_gateway_not_found_path(self) -> None:
+        client = Mock()
+        client.gateways.get.side_effect = NotFoundError("gateway not found")
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway("missing-id")
+
+        self.assertEqual(result["status"], "not_found")
+        self.assertEqual(result["error"]["type"], "NotFoundError")
+        self.assertEqual(result["error"]["message"], "gateway not found")
+
+    def test_list_gateways_sdk_error_path(self) -> None:
+        client = Mock()
+        client.gateways.list.side_effect = APIResponseError("upstream failure")
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = list_gateways()
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "APIResponseError")
+        self.assertEqual(result["error"]["message"], "upstream failure")
+
+    def test_serialize_gateway_supports_sdk_objects(self) -> None:
+        gateway = FakeGateway(
+            id="gw-123",
+            name="HQ Gateway",
+            managed=True,
+            is_activated=True,
+            overlay_id="overlay-9",
+            created_at="2024-01-01T00:00:00Z",
+            modified_at="2024-01-02T00:00:00Z",
+            device_config_raw={"hostname": "hq-1"},
+        )
+
+        self.assertEqual(
+            serialize_gateway(gateway),
+            {
+                "id": "gw-123",
+                "name": "HQ Gateway",
+                "managed": True,
+                "is_activated": True,
+                "overlay_id": "overlay-9",
+                "created_at": "2024-01-01T00:00:00Z",
+                "modified_at": "2024-01-02T00:00:00Z",
+                "device_config_raw": {"hostname": "hq-1"},
+            },
+        )

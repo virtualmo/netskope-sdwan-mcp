@@ -1,0 +1,53 @@
+"""Minimal MCP server entrypoint for Netskope SD-WAN."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from .tools.gateways import get_gateway, list_gateways
+
+SERVER_NAME = "netskope-sdwan-mcp"
+PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts", "list_audit_events")
+
+
+def create_server() -> Any:
+    """Create the MCP server and register placeholder read-only tools."""
+    try:
+        from mcp.server.fastmcp import FastMCP
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "The MCP Python SDK is required. Install project dependencies to run the server."
+        ) from exc
+
+    server = FastMCP(SERVER_NAME, json_response=True)
+    register_tools(server)
+    return server
+
+
+def register_tools(server: Any) -> Any:
+    """Register real and placeholder read-only tool handlers on an MCP server."""
+
+    @server.tool(name="list_gateways")
+    def _list_gateways(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateways(filter=filter)
+
+    @server.tool(name="get_gateway")
+    def _get_gateway(id: str) -> dict[str, Any]:
+        return get_gateway(id)
+
+    for tool_name in PLACEHOLDER_TOOL_NAMES:
+
+        @server.tool(name=tool_name)
+        def _placeholder_tool(tool_name: str = tool_name) -> dict[str, str]:
+            return {"status": "not_implemented", "tool": tool_name}
+
+    return server
+
+
+def main() -> None:
+    """Run the MCP server with the SDK's default transport."""
+    create_server().run()
+
+
+if __name__ == "__main__":
+    main()
