@@ -65,6 +65,7 @@ class SmokeTest(unittest.TestCase):
                 "get_segment",
                 "list_applications",
                 "get_application",
+                "list_audit_events",
                 "list_tenants",
                 "get_tenant",
                 "list_users",
@@ -73,7 +74,6 @@ class SmokeTest(unittest.TestCase):
                 "get_user_group",
                 "list_sites",
                 "list_alerts",
-                "list_audit_events",
             ),
         )
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
@@ -84,6 +84,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_segment"]))
         self.assertTrue(callable(server.registered_tools["list_applications"]))
         self.assertTrue(callable(server.registered_tools["get_application"]))
+        self.assertTrue(callable(server.registered_tools["list_audit_events"]))
         self.assertTrue(callable(server.registered_tools["list_tenants"]))
         self.assertTrue(callable(server.registered_tools["get_tenant"]))
         self.assertTrue(callable(server.registered_tools["list_users"]))

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from .tools.applications import get_application, list_applications
+from .tools.audit_events import list_audit_events
 from .tools.gateways import get_gateway, list_gateways
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.segments import get_segment, list_segments
@@ -13,7 +14,7 @@ from .tools.user_groups import get_user_group, list_user_groups
 from .tools.users import get_user, list_users
 
 SERVER_NAME = "netskope-sdwan-mcp"
-PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts", "list_audit_events")
+PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts")
 
 
 def create_server() -> Any:
@@ -64,6 +65,30 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_application")
     def _get_application(id: str) -> dict[str, Any]:
         return get_application(id)
+
+    @server.tool(name="list_audit_events")
+    def _list_audit_events(
+        created_at_from: str,
+        created_at_to: str,
+        type: str = None,
+        subtype: str = None,
+        activity: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+        filter: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_audit_events(
+            created_at_from=created_at_from,
+            created_at_to=created_at_to,
+            type=type,
+            subtype=subtype,
+            activity=activity,
+            after=after,
+            first=first,
+            sort=sort,
+            filter=filter,
+        )
 
     @server.tool(name="list_tenants")
     def _list_tenants(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
