@@ -7,7 +7,9 @@ from typing import Any
 from .tools.address_groups import get_address_group, list_address_groups
 from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
+from .tools.ca_certificates import get_ca_certificate, list_ca_certificates
 from .tools.client_templates import get_client_template, list_client_templates
+from .tools.cloud_accounts import get_cloud_account, list_cloud_accounts
 from .tools.device_groups import get_device_group, list_device_groups
 from .tools.gateways import (
     get_gateway,
@@ -75,6 +77,22 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_client_template")
     def _get_client_template(id: str) -> dict[str, Any]:
         return get_client_template(id)
+
+    @server.tool(name="list_cloud_accounts")
+    def _list_cloud_accounts(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_cloud_accounts(filter=filter)
+
+    @server.tool(name="get_cloud_account")
+    def _get_cloud_account(id: str) -> dict[str, Any]:
+        return get_cloud_account(id)
+
+    @server.tool(name="list_ca_certificates")
+    def _list_ca_certificates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_ca_certificates(filter=filter)
+
+    @server.tool(name="get_ca_certificate")
+    def _get_ca_certificate(id: str) -> dict[str, Any]:
+        return get_ca_certificate(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
