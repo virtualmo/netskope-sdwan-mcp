@@ -69,6 +69,8 @@ class SmokeTest(unittest.TestCase):
                 "get_interfaces_latest",
                 "get_paths_latest",
                 "get_routes_latest",
+                "get_system_load",
+                "get_paths_links_totals",
                 "list_tenants",
                 "get_tenant",
                 "list_users",
@@ -91,6 +93,8 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_interfaces_latest"]))
         self.assertTrue(callable(server.registered_tools["get_paths_latest"]))
         self.assertTrue(callable(server.registered_tools["get_routes_latest"]))
+        self.assertTrue(callable(server.registered_tools["get_system_load"]))
+        self.assertTrue(callable(server.registered_tools["get_paths_links_totals"]))
         self.assertTrue(callable(server.registered_tools["list_tenants"]))
         self.assertTrue(callable(server.registered_tools["get_tenant"]))
         self.assertTrue(callable(server.registered_tools["list_users"]))

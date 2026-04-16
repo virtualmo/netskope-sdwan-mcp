@@ -58,6 +58,50 @@ def get_routes_latest(
         return _serialize_sdk_error(exc)
 
 
+def get_system_load(
+    gateway_id: str,
+    child_tenant_id: str | None = None,
+    start_datetime: str | None = None,
+    end_datetime: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch system load history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_system_load(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_paths_links_totals(
+    gateway_id: str,
+    child_tenant_id: str | None = None,
+    start_datetime: str | None = None,
+    end_datetime: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch WAN path/link totals for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_paths_links_totals(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def _serialize_monitoring_payload(
     payload: list[dict[str, Any]] | dict[str, Any],
 ) -> list[dict[str, Any]] | dict[str, Any]:

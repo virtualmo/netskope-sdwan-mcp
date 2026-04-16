@@ -11,7 +11,9 @@ from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.monitoring_v1 import (
     get_interfaces_latest,
     get_paths_latest,
+    get_paths_links_totals,
     get_routes_latest,
+    get_system_load,
 )
 from .tools.segments import get_segment, list_segments
 from .tools.tenants import get_tenant, list_tenants
@@ -123,6 +125,36 @@ def register_tools(server: Any) -> Any:
         return get_routes_latest(
             gateway_id,
             child_tenant_id=child_tenant_id,
+        )
+
+    @server.tool(name="get_system_load")
+    def _get_system_load(
+        gateway_id: str,
+        child_tenant_id: str = None,
+        start_datetime: str = None,
+        end_datetime: str = None,
+        time_slots: int = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_system_load(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
+            time_slots=time_slots,
+        )
+
+    @server.tool(name="get_paths_links_totals")
+    def _get_paths_links_totals(
+        gateway_id: str,
+        child_tenant_id: str = None,
+        start_datetime: str = None,
+        end_datetime: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_paths_links_totals(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
         )
 
     @server.tool(name="list_tenants")
