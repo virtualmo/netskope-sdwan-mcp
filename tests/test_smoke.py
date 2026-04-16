@@ -58,6 +58,8 @@ class SmokeTest(unittest.TestCase):
             tuple(server.registered_tools.keys()),
             (
                 "list_gateways",
+                "list_address_groups",
+                "get_address_group",
                 "get_gateway",
                 "get_gateway_operational_snapshot",
                 "list_gateway_groups",
@@ -82,6 +84,8 @@ class SmokeTest(unittest.TestCase):
                 "list_alerts",
             ),
         )
+        self.assertTrue(callable(server.registered_tools["list_address_groups"]))
+        self.assertTrue(callable(server.registered_tools["get_address_group"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))

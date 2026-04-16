@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .tools.address_groups import get_address_group, list_address_groups
 from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
 from .tools.gateways import (
@@ -48,6 +49,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="list_gateways")
     def _list_gateways(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
         return list_gateways(filter=filter)
+
+    @server.tool(name="list_address_groups")
+    def _list_address_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_address_groups(filter=filter)
+
+    @server.tool(name="get_address_group")
+    def _get_address_group(id: str) -> dict[str, Any]:
+        return get_address_group(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
