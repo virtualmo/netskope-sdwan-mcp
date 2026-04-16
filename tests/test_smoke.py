@@ -70,6 +70,10 @@ class SmokeTest(unittest.TestCase):
                 "get_ca_certificate",
                 "list_controllers",
                 "get_controller",
+                "list_gateway_templates",
+                "get_gateway_template",
+                "list_ntp_configs",
+                "get_ntp_config",
                 "get_gateway",
                 "get_gateway_operational_snapshot",
                 "list_gateway_groups",
@@ -106,6 +110,10 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_ca_certificate"]))
         self.assertTrue(callable(server.registered_tools["list_controllers"]))
         self.assertTrue(callable(server.registered_tools["get_controller"]))
+        self.assertTrue(callable(server.registered_tools["list_gateway_templates"]))
+        self.assertTrue(callable(server.registered_tools["get_gateway_template"]))
+        self.assertTrue(callable(server.registered_tools["list_ntp_configs"]))
+        self.assertTrue(callable(server.registered_tools["get_ntp_config"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))

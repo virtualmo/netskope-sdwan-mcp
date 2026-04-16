@@ -18,6 +18,7 @@ from .tools.gateways import (
     list_gateways,
 )
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
+from .tools.gateway_templates import get_gateway_template, list_gateway_templates
 from .tools.monitoring_v1 import (
     get_interfaces_latest,
     get_paths_latest,
@@ -25,6 +26,7 @@ from .tools.monitoring_v1 import (
     get_routes_latest,
     get_system_load,
 )
+from .tools.ntp_configs import get_ntp_config, list_ntp_configs
 from .tools.segments import get_segment, list_segments
 from .tools.tenants import get_tenant, list_tenants
 from .tools.user_groups import get_user_group, list_user_groups
@@ -102,6 +104,22 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_controller")
     def _get_controller(id: str) -> dict[str, Any]:
         return get_controller(id)
+
+    @server.tool(name="list_gateway_templates")
+    def _list_gateway_templates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateway_templates(filter=filter)
+
+    @server.tool(name="get_gateway_template")
+    def _get_gateway_template(id: str) -> dict[str, Any]:
+        return get_gateway_template(id)
+
+    @server.tool(name="list_ntp_configs")
+    def _list_ntp_configs(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_ntp_configs(filter=filter)
+
+    @server.tool(name="get_ntp_config")
+    def _get_ntp_config(id: str) -> dict[str, Any]:
+        return get_ntp_config(id)
 
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
