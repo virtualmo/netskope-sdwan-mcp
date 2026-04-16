@@ -63,6 +63,8 @@ class SmokeTest(unittest.TestCase):
                 "get_tenant",
                 "list_users",
                 "get_user",
+                "list_user_groups",
+                "get_user_group",
                 "list_sites",
                 "list_alerts",
                 "list_audit_events",
@@ -74,6 +76,8 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_tenant"]))
         self.assertTrue(callable(server.registered_tools["list_users"]))
         self.assertTrue(callable(server.registered_tools["get_user"]))
+        self.assertTrue(callable(server.registered_tools["list_user_groups"]))
+        self.assertTrue(callable(server.registered_tools["get_user_group"]))
 
 
 if __name__ == "__main__":

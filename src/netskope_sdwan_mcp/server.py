@@ -6,6 +6,7 @@ from typing import Any
 
 from .tools.gateways import get_gateway, list_gateways
 from .tools.tenants import get_tenant, list_tenants
+from .tools.user_groups import get_user_group, list_user_groups
 from .tools.users import get_user, list_users
 
 SERVER_NAME = "netskope-sdwan-mcp"
@@ -52,6 +53,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_user")
     def _get_user(id: str) -> dict[str, Any]:
         return get_user(id)
+
+    @server.tool(name="list_user_groups")
+    def _list_user_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_user_groups(filter=filter)
+
+    @server.tool(name="get_user_group")
+    def _get_user_group(id: str) -> dict[str, Any]:
+        return get_user_group(id)
 
     for tool_name in PLACEHOLDER_TOOL_NAMES:
 
