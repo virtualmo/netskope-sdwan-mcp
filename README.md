@@ -1,28 +1,48 @@
 # netskope-sdwan-mcp
 
-Read-only MCP server for Netskope SD-WAN.
+Read-only Netskope SD-WAN MCP server backed by the Python SDK
+`netskope-sdwan-py-sdk`.
 
-This repository is separate from the SDK and is intended to use the existing
-`netskope-sdwan-py-sdk` project as its API client layer rather than making HTTP
-requests directly.
+This repository is a thin MCP wrapper over the SDK. It exposes read-only tools
+and does not make direct HTTP requests itself.
 
-Implemented as a thin MCP wrapper around `netskope-sdwan-py-sdk`. Only read
-operations are exposed.
+## Implemented tools
 
-## Local development
+### Gateway tools
 
-Requirements:
+- `list_gateways`
+- `get_gateway`
 
-- Python 3.11+
+### Resource tools
 
-Create a virtual environment and install the package in editable mode:
+- `list_gateway_groups`
+- `get_gateway_group`
+- `list_segments`
+- `get_segment`
+- `list_applications`
+- `get_application`
+- `list_tenants`
+- `get_tenant`
+- `list_users`
+- `get_user`
+- `list_user_groups`
+- `get_user_group`
 
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-```
+### Audit tools
+
+- `list_audit_events`
+
+### Monitoring tools
+
+- `get_interfaces_latest`
+- `get_paths_latest`
+- `get_routes_latest`
+- `get_system_load`
+- `get_paths_links_totals`
+
+## Environment
+
+Python 3.11+ is required.
 
 Required environment variables:
 
@@ -38,64 +58,22 @@ export NETSKOPESDWAN_TIMEOUT="30"
 export NETSKOPESDWAN_INSECURE="false"
 ```
 
-Run the smoke test placeholder:
+## Local run
+
+Create a virtual environment and install the package in editable mode:
 
 ```bash
-python -m unittest discover -s tests -p "test_*.py"
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
-Run the MCP server entrypoint after installing dependencies:
+Minimal local run:
 
 ```bash
+source .venv/bin/activate
+export NETSKOPESDWAN_BASE_URL="https://your-sdwan-tenant.api.eu.infiot.net"
+export NETSKOPESDWAN_API_TOKEN="your-api-token"
 python -m netskope_sdwan_mcp.server
-```
-
-## Implemented tools
-
-### Gateways
-
-- `list_gateways`
-- `get_gateway`
-
-### Gateway groups
-
-- `list_gateway_groups`
-- `get_gateway_group`
-
-### Segments
-
-- `list_segments`
-- `get_segment`
-
-### Applications
-
-- `list_applications`
-- `get_application`
-
-### Tenants
-
-- `list_tenants`
-- `get_tenant`
-
-### Users
-
-- `list_users`
-- `get_user`
-
-### User groups
-
-- `list_user_groups`
-- `get_user_group`
-
-## Example usage
-
-Ask the MCP server for gateways with a backend filter such as `status:up` using
-`list_gateways(filter="status:up")`, then inspect one result in detail with
-`get_gateway(id="...")`.
-
-## Project layout
-
-```text
-src/netskope_sdwan_mcp/
-tests/
 ```
