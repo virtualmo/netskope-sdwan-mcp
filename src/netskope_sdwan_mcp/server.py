@@ -8,6 +8,11 @@ from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
 from .tools.gateways import get_gateway, list_gateways
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
+from .tools.monitoring_v1 import (
+    get_interfaces_latest,
+    get_paths_latest,
+    get_routes_latest,
+)
 from .tools.segments import get_segment, list_segments
 from .tools.tenants import get_tenant, list_tenants
 from .tools.user_groups import get_user_group, list_user_groups
@@ -88,6 +93,36 @@ def register_tools(server: Any) -> Any:
             first=first,
             sort=sort,
             filter=filter,
+        )
+
+    @server.tool(name="get_interfaces_latest")
+    def _get_interfaces_latest(
+        gateway_id: str,
+        child_tenant_id: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_interfaces_latest(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
+        )
+
+    @server.tool(name="get_paths_latest")
+    def _get_paths_latest(
+        gateway_id: str,
+        child_tenant_id: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_paths_latest(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
+        )
+
+    @server.tool(name="get_routes_latest")
+    def _get_routes_latest(
+        gateway_id: str,
+        child_tenant_id: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_routes_latest(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
         )
 
     @server.tool(name="list_tenants")
