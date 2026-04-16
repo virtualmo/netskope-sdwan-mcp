@@ -11,6 +11,10 @@ from .tools.ca_certificates import get_ca_certificate, list_ca_certificates
 from .tools.clients import get_client, list_clients
 from .tools.client_templates import get_client_template, list_client_templates
 from .tools.cloud_accounts import get_cloud_account, list_cloud_accounts
+from .tools.controller_operators import (
+    get_controller_operator,
+    list_controller_operators,
+)
 from .tools.controllers import get_controller, list_controllers
 from .tools.device_groups import get_device_group, list_device_groups
 from .tools.gateways import (
@@ -109,6 +113,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_client")
     def _get_client(id: str) -> dict[str, Any]:
         return get_client(id)
+
+    @server.tool(name="list_controller_operators")
+    def _list_controller_operators(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_controller_operators(filter=filter)
+
+    @server.tool(name="get_controller_operator")
+    def _get_controller_operator(id: str) -> dict[str, Any]:
+        return get_controller_operator(id)
 
     @server.tool(name="list_controllers")
     def _list_controllers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
