@@ -6,6 +6,7 @@ from typing import Any
 
 from .tools.gateways import get_gateway, list_gateways
 from .tools.tenants import get_tenant, list_tenants
+from .tools.users import get_user, list_users
 
 SERVER_NAME = "netskope-sdwan-mcp"
 PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts", "list_audit_events")
@@ -43,6 +44,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_tenant")
     def _get_tenant(id: str) -> dict[str, Any]:
         return get_tenant(id)
+
+    @server.tool(name="list_users")
+    def _list_users(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_users(filter=filter)
+
+    @server.tool(name="get_user")
+    def _get_user(id: str) -> dict[str, Any]:
+        return get_user(id)
 
     for tool_name in PLACEHOLDER_TOOL_NAMES:
 
