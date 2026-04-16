@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from .tools.gateways import get_gateway, list_gateways
+from .tools.tenants import get_tenant, list_tenants
 
 SERVER_NAME = "netskope-sdwan-mcp"
 PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts", "list_audit_events")
@@ -34,6 +35,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_gateway")
     def _get_gateway(id: str) -> dict[str, Any]:
         return get_gateway(id)
+
+    @server.tool(name="list_tenants")
+    def _list_tenants(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_tenants(filter=filter)
+
+    @server.tool(name="get_tenant")
+    def _get_tenant(id: str) -> dict[str, Any]:
+        return get_tenant(id)
 
     for tool_name in PLACEHOLDER_TOOL_NAMES:
 
