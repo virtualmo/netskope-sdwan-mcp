@@ -76,6 +76,10 @@ class SmokeTest(unittest.TestCase):
                 "get_ntp_config",
                 "list_overlay_tags",
                 "get_overlay_tag",
+                "list_policies",
+                "get_policy",
+                "list_radius_servers",
+                "get_radius_server",
                 "list_vpn_peers",
                 "get_vpn_peer",
                 "get_gateway",
@@ -120,6 +124,10 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_ntp_config"]))
         self.assertTrue(callable(server.registered_tools["list_overlay_tags"]))
         self.assertTrue(callable(server.registered_tools["get_overlay_tag"]))
+        self.assertTrue(callable(server.registered_tools["list_policies"]))
+        self.assertTrue(callable(server.registered_tools["get_policy"]))
+        self.assertTrue(callable(server.registered_tools["list_radius_servers"]))
+        self.assertTrue(callable(server.registered_tools["get_radius_server"]))
         self.assertTrue(callable(server.registered_tools["list_vpn_peers"]))
         self.assertTrue(callable(server.registered_tools["get_vpn_peer"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))

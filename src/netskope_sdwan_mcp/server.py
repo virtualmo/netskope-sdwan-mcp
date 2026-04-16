@@ -28,6 +28,8 @@ from .tools.monitoring_v1 import (
 )
 from .tools.ntp_configs import get_ntp_config, list_ntp_configs
 from .tools.overlay_tags import get_overlay_tag, list_overlay_tags
+from .tools.policies import get_policy, list_policies
+from .tools.radius_servers import get_radius_server, list_radius_servers
 from .tools.segments import get_segment, list_segments
 from .tools.tenants import get_tenant, list_tenants
 from .tools.user_groups import get_user_group, list_user_groups
@@ -130,6 +132,22 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_overlay_tag")
     def _get_overlay_tag(id: str) -> dict[str, Any]:
         return get_overlay_tag(id)
+
+    @server.tool(name="list_policies")
+    def _list_policies(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_policies(filter=filter)
+
+    @server.tool(name="get_policy")
+    def _get_policy(id: str) -> dict[str, Any]:
+        return get_policy(id)
+
+    @server.tool(name="list_radius_servers")
+    def _list_radius_servers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_radius_servers(filter=filter)
+
+    @server.tool(name="get_radius_server")
+    def _get_radius_server(id: str) -> dict[str, Any]:
+        return get_radius_server(id)
 
     @server.tool(name="list_vpn_peers")
     def _list_vpn_peers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
