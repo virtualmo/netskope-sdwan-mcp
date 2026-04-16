@@ -68,6 +68,8 @@ class SmokeTest(unittest.TestCase):
                 "get_cloud_account",
                 "list_ca_certificates",
                 "get_ca_certificate",
+                "list_clients",
+                "get_client",
                 "list_controllers",
                 "get_controller",
                 "list_gateway_templates",
@@ -116,6 +118,8 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_cloud_account"]))
         self.assertTrue(callable(server.registered_tools["list_ca_certificates"]))
         self.assertTrue(callable(server.registered_tools["get_ca_certificate"]))
+        self.assertTrue(callable(server.registered_tools["list_clients"]))
+        self.assertTrue(callable(server.registered_tools["get_client"]))
         self.assertTrue(callable(server.registered_tools["list_controllers"]))
         self.assertTrue(callable(server.registered_tools["get_controller"]))
         self.assertTrue(callable(server.registered_tools["list_gateway_templates"]))

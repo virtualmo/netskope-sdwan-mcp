@@ -8,6 +8,7 @@ from .tools.address_groups import get_address_group, list_address_groups
 from .tools.applications import get_application, list_applications
 from .tools.audit_events import list_audit_events
 from .tools.ca_certificates import get_ca_certificate, list_ca_certificates
+from .tools.clients import get_client, list_clients
 from .tools.client_templates import get_client_template, list_client_templates
 from .tools.cloud_accounts import get_cloud_account, list_cloud_accounts
 from .tools.controllers import get_controller, list_controllers
@@ -100,6 +101,14 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_ca_certificate")
     def _get_ca_certificate(id: str) -> dict[str, Any]:
         return get_ca_certificate(id)
+
+    @server.tool(name="list_clients")
+    def _list_clients(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_clients(filter=filter)
+
+    @server.tool(name="get_client")
+    def _get_client(id: str) -> dict[str, Any]:
+        return get_client(id)
 
     @server.tool(name="list_controllers")
     def _list_controllers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
