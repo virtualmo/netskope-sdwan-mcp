@@ -70,9 +70,11 @@ Meaning:
 ## Transport
 
 - Local: ✅ stdio (Claude Desktop, Gemini CLI)
-- Remote: ❌ not supported yet
+- Remote: ✅ experimental Streamable HTTP
 
 ## Running locally
+
+Local stdio mode remains the default. Existing local setups do not need to change.
 
 Run the MCP server over stdio:
 
@@ -80,6 +82,32 @@ Run the MCP server over stdio:
 source .venv/bin/activate
 python -m netskope_sdwan_mcp.server
 ```
+
+## Running remotely
+
+Minimal remote MCP hosting is now available through FastMCP's Streamable HTTP
+transport.
+
+```bash
+source .venv/bin/activate
+export MCP_TRANSPORT="http"
+export MCP_HOST="127.0.0.1"
+export MCP_PORT="8000"
+python -m netskope_sdwan_mcp.server
+```
+
+Environment variables:
+
+- `MCP_TRANSPORT`: `stdio` (default) or `http`
+- `MCP_HOST`: bind host for remote HTTP mode, default `127.0.0.1`
+- `MCP_PORT`: bind port for remote HTTP mode, default `8000`
+
+Notes:
+
+- `MCP_TRANSPORT=http` maps to FastMCP's current `streamable-http` transport
+- SSE is intentionally not enabled in this project
+- for real hosted deployment, put the server behind HTTPS, authentication, and
+  a reverse proxy or equivalent edge controls
 
 The current MCP surface includes:
 
@@ -103,7 +131,8 @@ Composite tools currently implemented:
 ## Claude Desktop setup
 
 Claude Desktop runs local MCP servers through a JSON config file. Add this
-server under `mcpServers` and use absolute paths.
+server under `mcpServers` and use absolute paths. Keep the default stdio mode
+for these local desktop clients.
 
 Config file locations:
 
@@ -134,7 +163,7 @@ Restart Claude Desktop after saving the file.
 ## Gemini CLI setup
 
 Gemini CLI supports MCP servers through `mcpServers` in `settings.json`, or via
-`gemini mcp add`.
+`gemini mcp add`. Keep the default stdio mode for local CLI usage.
 
 User-scoped config file:
 

@@ -11,10 +11,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 
 class FakeFastMCP:
-    def __init__(self, name: str, json_response: bool = False) -> None:
+    def __init__(
+        self,
+        name: str,
+        json_response: bool = False,
+        host: str = "127.0.0.1",
+        port: int = 8000,
+    ) -> None:
         self.name = name
         self.json_response = json_response
+        self.host = host
+        self.port = port
         self.registered_tools: dict[str, object] = {}
+        self.run_calls: list[dict[str, object]] = []
 
     def tool(self, name=None, description=None):
         _ = description
@@ -26,7 +35,8 @@ class FakeFastMCP:
 
         return decorator
 
-    def run(self) -> None:
+    def run(self, transport: str = "stdio", mount_path=None) -> None:
+        self.run_calls.append({"transport": transport, "mount_path": mount_path})
         return None
 
 
@@ -54,6 +64,8 @@ class SmokeTest(unittest.TestCase):
 
         self.assertEqual(server.name, "netskope-sdwan-mcp")
         self.assertTrue(server.json_response)
+        self.assertEqual(server.host, "127.0.0.1")
+        self.assertEqual(server.port, 8000)
         self.assertEqual(
             tuple(server.registered_tools.keys()),
             (
@@ -217,6 +229,99 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["list_user_groups"]))
         self.assertTrue(callable(server.registered_tools["get_user_group"]))
         self.assertTrue(callable(server.registered_tools["get_v1_user_groups"]))
+
+    def test_load_runtime_config_defaults_to_stdio(self) -> None:
+        server_module = import_module("netskope_sdwan_mcp.server")
+
+        config = server_module.load_runtime_config({})
+
+        self.assertEqual(config.transport, "stdio")
+        self.assertEqual(config.host, "127.0.0.1")
+        self.assertEqual(config.port, 8000)
+
+    def test_load_runtime_config_maps_http_transport(self) -> None:
+        server_module = import_module("netskope_sdwan_mcp.server")
+
+        config = server_module.load_runtime_config(
+            {
+                "MCP_TRANSPORT": "http",
+                "MCP_HOST": "0.0.0.0",
+                "MCP_PORT": "9000",
+            }
+        )
+
+        self.assertEqual(config.transport, "streamable-http")
+        self.assertEqual(config.host, "0.0.0.0")
+        self.assertEqual(config.port, 9000)
+
+    def test_main_uses_stdio_by_default(self) -> None:
+        fake_fastmcp_module = types.SimpleNamespace(FastMCP=FakeFastMCP)
+        fake_mcp_module = types.ModuleType("mcp")
+        fake_server_module = types.ModuleType("mcp.server")
+
+        with patch.dict(
+            sys.modules,
+            {
+                "mcp": fake_mcp_module,
+                "mcp.server": fake_server_module,
+                "mcp.server.fastmcp": fake_fastmcp_module,
+            },
+        ):
+            sys.modules.pop("netskope_sdwan_mcp.server", None)
+            server_module = import_module("netskope_sdwan_mcp.server")
+            created_servers: list[FakeFastMCP] = []
+            original_create_server = server_module.create_server
+
+            def tracking_create_server(config=None):
+                server = original_create_server(config)
+                created_servers.append(server)
+                return server
+
+            with patch.object(server_module, "create_server", side_effect=tracking_create_server):
+                with patch.dict("os.environ", {}, clear=True):
+                    server_module.main()
+
+        self.assertEqual(len(created_servers), 1)
+        self.assertEqual(created_servers[0].run_calls, [{"transport": "stdio", "mount_path": None}])
+
+    def test_main_uses_http_transport_when_requested(self) -> None:
+        fake_fastmcp_module = types.SimpleNamespace(FastMCP=FakeFastMCP)
+        fake_mcp_module = types.ModuleType("mcp")
+        fake_server_module = types.ModuleType("mcp.server")
+
+        with patch.dict(
+            sys.modules,
+            {
+                "mcp": fake_mcp_module,
+                "mcp.server": fake_server_module,
+                "mcp.server.fastmcp": fake_fastmcp_module,
+            },
+        ):
+            sys.modules.pop("netskope_sdwan_mcp.server", None)
+            server_module = import_module("netskope_sdwan_mcp.server")
+            created_servers: list[FakeFastMCP] = []
+            original_create_server = server_module.create_server
+
+            def tracking_create_server(config=None):
+                server = original_create_server(config)
+                created_servers.append(server)
+                return server
+
+            with patch.object(server_module, "create_server", side_effect=tracking_create_server):
+                with patch.dict(
+                    "os.environ",
+                    {"MCP_TRANSPORT": "http", "MCP_HOST": "0.0.0.0", "MCP_PORT": "9000"},
+                    clear=True,
+                ):
+                    server_module.main()
+
+        self.assertEqual(len(created_servers), 1)
+        self.assertEqual(created_servers[0].host, "0.0.0.0")
+        self.assertEqual(created_servers[0].port, 9000)
+        self.assertEqual(
+            created_servers[0].run_calls,
+            [{"transport": "streamable-http", "mount_path": None}],
+        )
 
 
 if __name__ == "__main__":

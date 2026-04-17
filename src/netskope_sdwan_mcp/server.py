@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+from dataclasses import dataclass
 from typing import Any
 
 from .tools.address_groups import (
@@ -84,9 +86,48 @@ from .tools.vpn_peers import get_vpn_peer, list_vpn_peers
 
 SERVER_NAME = "netskope-sdwan-mcp"
 PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts")
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_PORT = 8000
 
 
-def create_server() -> Any:
+@dataclass(frozen=True)
+class RuntimeConfig:
+    """Transport settings for local or remote MCP startup."""
+
+    transport: str = "stdio"
+    host: str = DEFAULT_HOST
+    port: int = DEFAULT_PORT
+
+
+def load_runtime_config(environ: dict[str, str] | None = None) -> RuntimeConfig:
+    """Load env-driven runtime settings for stdio or remote HTTP startup."""
+    env = environ if environ is not None else os.environ
+    raw_transport = env.get("MCP_TRANSPORT", "stdio").strip().lower()
+
+    if raw_transport == "stdio":
+        transport = "stdio"
+    elif raw_transport in {"http", "streamable-http"}:
+        transport = "streamable-http"
+    else:
+        raise ValueError(
+            "Unsupported MCP_TRANSPORT value. Expected one of: stdio, http."
+        )
+
+    host = env.get("MCP_HOST", DEFAULT_HOST).strip() or DEFAULT_HOST
+    raw_port = env.get("MCP_PORT", str(DEFAULT_PORT)).strip()
+
+    try:
+        port = int(raw_port)
+    except ValueError as exc:
+        raise ValueError("MCP_PORT must be an integer.") from exc
+
+    if not 1 <= port <= 65535:
+        raise ValueError("MCP_PORT must be between 1 and 65535.")
+
+    return RuntimeConfig(transport=transport, host=host, port=port)
+
+
+def create_server(config: RuntimeConfig | None = None) -> Any:
     """Create the MCP server and register placeholder read-only tools."""
     try:
         from mcp.server.fastmcp import FastMCP
@@ -95,7 +136,13 @@ def create_server() -> Any:
             "The MCP Python SDK is required. Install project dependencies to run the server."
         ) from exc
 
-    server = FastMCP(SERVER_NAME, json_response=True)
+    runtime_config = config or load_runtime_config()
+    server = FastMCP(
+        SERVER_NAME,
+        host=runtime_config.host,
+        port=runtime_config.port,
+        json_response=True,
+    )
     register_tools(server)
     return server
 
@@ -578,8 +625,9 @@ def register_tools(server: Any) -> Any:
 
 
 def main() -> None:
-    """Run the MCP server with the SDK's default transport."""
-    create_server().run()
+    """Run the MCP server in local stdio mode or optional remote HTTP mode."""
+    config = load_runtime_config()
+    create_server(config).run(transport=config.transport)
 
 
 if __name__ == "__main__":
