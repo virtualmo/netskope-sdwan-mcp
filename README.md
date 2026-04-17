@@ -133,9 +133,7 @@ Example:
       "args": ["-m", "netskope_sdwan_mcp.server"],
       "env": {
         "NETSKOPESDWAN_BASE_URL": "https://your-sdwan-tenant.api.eu.infiot.net",
-        "NETSKOPESDWAN_API_TOKEN": "your-api-token",
-        "NETSKOPESDWAN_TIMEOUT": "30",
-        "NETSKOPESDWAN_INSECURE": "false"
+        "NETSKOPESDWAN_API_TOKEN": "your-api-token"
       }
     }
   }
@@ -167,9 +165,7 @@ Example `settings.json` entry:
       "args": ["-m", "netskope_sdwan_mcp.server"],
       "env": {
         "NETSKOPESDWAN_BASE_URL": "$NETSKOPESDWAN_BASE_URL",
-        "NETSKOPESDWAN_API_TOKEN": "$NETSKOPESDWAN_API_TOKEN",
-        "NETSKOPESDWAN_TIMEOUT": "$NETSKOPESDWAN_TIMEOUT",
-        "NETSKOPESDWAN_INSECURE": "$NETSKOPESDWAN_INSECURE"
+        "NETSKOPESDWAN_API_TOKEN": "$NETSKOPESDWAN_API_TOKEN"
       },
       "cwd": "/ABSOLUTE/PATH/TO/netskope-sdwan-mcp"
     }
