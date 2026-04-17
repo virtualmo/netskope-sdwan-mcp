@@ -94,6 +94,7 @@ class SmokeTest(unittest.TestCase):
                 "get_vpn_peer",
                 "get_gateway",
                 "get_gateway_telemetry_overview",
+                "get_gateway_status",
                 "get_gateway_operational_snapshot",
                 "list_gateway_groups",
                 "get_gateway_group",
@@ -174,6 +175,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_telemetry_overview"]))
+        self.assertTrue(callable(server.registered_tools["get_gateway_status"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))
         self.assertTrue(callable(server.registered_tools["list_gateway_groups"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_group"]))

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from netskope_sdwan_mcp.errors import ConfigurationError
 from netskope_sdwan_mcp.tools.gateways import (
     get_gateway,
+    get_gateway_status,
     get_gateway_telemetry_overview,
     get_gateway_operational_snapshot,
     list_gateways,
@@ -114,6 +115,68 @@ class GatewayToolsTest(unittest.TestCase):
             {
                 "cpu": {"current": 17.5},
                 "memory": {"current": 62.0},
+            },
+        )
+
+    def test_get_gateway_status_success(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+            is_activated=True,
+        )
+        client.gateways.get_telemetry_overview.return_value = {
+            "status_v2": {
+                "status": "online",
+                "conditions": [{"type": "wan", "status": "healthy"}],
+            },
+            "software_version": "10.2.1",
+            "software_upgraded_at": "2026-04-17T09:30:00Z",
+            "links_avg_score": 98.7,
+        }
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_status("gw-001")
+
+        client.gateways.get.assert_called_once_with("gw-001")
+        client.gateways.get_telemetry_overview.assert_called_once_with("gw-001")
+        self.assertEqual(
+            result,
+            {
+                "gateway_id": "gw-001",
+                "name": "Branch Gateway 1",
+                "is_activated": True,
+                "status": "online",
+                "conditions": [{"type": "wan", "status": "healthy"}],
+                "software_version": "10.2.1",
+                "software_upgraded_at": "2026-04-17T09:30:00Z",
+                "links_avg_score": 98.7,
+            },
+        )
+
+    def test_get_gateway_status_missing_telemetry_fields_return_null(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+            is_activated=False,
+        )
+        client.gateways.get_telemetry_overview.return_value = {"cpu": {"current": 17.5}}
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_status("gw-001")
+
+        self.assertEqual(
+            result,
+            {
+                "gateway_id": "gw-001",
+                "name": "Branch Gateway 1",
+                "is_activated": False,
+                "status": None,
+                "conditions": None,
+                "software_version": None,
+                "software_upgraded_at": None,
+                "links_avg_score": None,
             },
         )
 
@@ -233,6 +296,21 @@ class GatewayToolsTest(unittest.TestCase):
 
         with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
             result = get_gateway_telemetry_overview("gw-001")
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_gateway_status_error_path(self) -> None:
+        client = Mock()
+        client.gateways.get.return_value = FakeGateway(
+            id="gw-001",
+            name="Branch Gateway 1",
+        )
+        client.gateways.get_telemetry_overview.side_effect = APIResponseError("upstream failure")
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_status("gw-001")
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")

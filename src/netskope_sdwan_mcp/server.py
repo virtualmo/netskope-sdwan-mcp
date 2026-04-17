@@ -41,6 +41,7 @@ from .tools.edges_v1 import (
 )
 from .tools.gateways import (
     get_gateway,
+    get_gateway_status,
     get_gateway_telemetry_overview,
     get_gateway_operational_snapshot,
     list_gateways,
@@ -251,6 +252,10 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_gateway_telemetry_overview")
     def _get_gateway_telemetry_overview(gateway_id: str) -> dict[str, Any]:
         return get_gateway_telemetry_overview(gateway_id)
+
+    @server.tool(name="get_gateway_status")
+    def _get_gateway_status(gateway_id: str) -> dict[str, Any]:
+        return get_gateway_status(gateway_id)
 
     @server.tool(name="get_gateway_operational_snapshot")
     def _get_gateway_operational_snapshot(

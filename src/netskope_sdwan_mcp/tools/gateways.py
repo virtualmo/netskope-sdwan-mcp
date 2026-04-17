@@ -40,6 +40,19 @@ def get_gateway_telemetry_overview(gateway_id: str) -> dict[str, Any]:
         return _serialize_sdk_error(exc)
 
 
+def get_gateway_status(gateway_id: str) -> dict[str, Any]:
+    """Fetch a small composite gateway status view from gateway and telemetry data."""
+    try:
+        client = build_sdk_client()
+        gateway = client.gateways.get(gateway_id)
+        telemetry = _serialize_gateway_telemetry_overview(
+            client.gateways.get_telemetry_overview(gateway_id)
+        )
+        return _build_gateway_status(gateway, telemetry)
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_gateway_operational_snapshot(
     id: str,
     child_tenant_id: str | None = None,
@@ -107,6 +120,24 @@ def _serialize_monitoring_payload(
     if isinstance(payload, list):
         return [dict(item) for item in payload]
     return payload
+
+
+def _build_gateway_status(gateway: Any, telemetry: dict[str, Any]) -> dict[str, Any]:
+    status_v2 = telemetry.get("status_v2")
+    if not isinstance(status_v2, dict):
+        status_v2 = {}
+
+    serialized_gateway = serialize_gateway(gateway)
+    return {
+        "gateway_id": serialized_gateway.get("id"),
+        "name": serialized_gateway.get("name"),
+        "is_activated": serialized_gateway.get("is_activated"),
+        "status": status_v2.get("status"),
+        "conditions": status_v2.get("conditions"),
+        "software_version": telemetry.get("software_version"),
+        "software_upgraded_at": telemetry.get("software_upgraded_at"),
+        "links_avg_score": telemetry.get("links_avg_score"),
+    }
 
 
 def _serialize_gateway_telemetry_overview(payload: dict[str, Any]) -> dict[str, Any]:
