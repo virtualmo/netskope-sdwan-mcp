@@ -19,6 +19,36 @@ def list_applications(filter: str | None = None) -> list[dict[str, Any]] | dict[
         return _serialize_sdk_error(exc)
 
 
+def list_application_categories() -> list[dict[str, Any]] | dict[str, Any]:
+    """List application categories through the SDK and return JSON-serializable data."""
+    try:
+        client = build_sdk_client()
+        categories = client.applications.list_categories()
+        return [serialize_application(item) for item in categories]
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def list_qosmos_apps(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+    """List qosmos applications through the SDK and return JSON-serializable data."""
+    try:
+        client = build_sdk_client()
+        qosmos_apps = client.applications.list_qosmos_apps(filter=filter)
+        return [serialize_application(item) for item in qosmos_apps]
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def list_webroot_categories() -> list[dict[str, Any]] | dict[str, Any]:
+    """List webroot categories through the SDK and return JSON-serializable data."""
+    try:
+        client = build_sdk_client()
+        categories = client.applications.list_webroot_categories()
+        return [serialize_application(item) for item in categories]
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_application(id: str) -> dict[str, Any]:
     """Fetch one application by ID through the SDK and return JSON-serializable data."""
     try:

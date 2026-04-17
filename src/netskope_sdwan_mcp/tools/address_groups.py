@@ -29,6 +29,22 @@ def get_address_group(id: str) -> dict[str, Any]:
         return _serialize_sdk_error(exc)
 
 
+def list_address_group_objects(
+    group_id: str,
+    filter: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """List address objects for one address group through the SDK."""
+    try:
+        client = build_sdk_client()
+        address_objects = client.address_groups.list_address_objects(
+            group_id,
+            filter=filter,
+        )
+        return [serialize_address_group(item) for item in address_objects]
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def serialize_address_group(address_group: Any) -> dict[str, Any]:
     """Serialize an SDK address-group resource into a plain dictionary."""
     if is_dataclass(address_group):

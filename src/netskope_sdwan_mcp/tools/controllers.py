@@ -29,6 +29,17 @@ def get_controller(id: str) -> dict[str, Any]:
         return _serialize_sdk_error(exc)
 
 
+def get_controller_operator_status(controller_id: str) -> dict[str, Any]:
+    """Fetch controller operator status through the SDK and return JSON-serializable data."""
+    try:
+        client = build_sdk_client()
+        return _serialize_controller_operator_status(
+            client.controllers.get_operator_status(controller_id)
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def serialize_controller(controller: Any) -> dict[str, Any]:
     """Serialize an SDK controller resource into a plain dictionary."""
     if is_dataclass(controller):
@@ -48,6 +59,18 @@ def serialize_controller(controller: Any) -> dict[str, Any]:
     return {
         "id": getattr(controller, "id", None),
         "name": getattr(controller, "name", None),
+    }
+
+
+def _serialize_controller_operator_status(payload: dict[str, Any]) -> dict[str, Any]:
+    if isinstance(payload, dict):
+        return dict(payload)
+    return {
+        "status": "error",
+        "error": {
+            "type": "TypeError",
+            "message": "Controller operator status payload must be a JSON object.",
+        },
     }
 
 

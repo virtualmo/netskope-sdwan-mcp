@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from netskope_sdwan_mcp.tools.controllers import (
     get_controller,
+    get_controller_operator_status,
     list_controllers,
     serialize_controller,
 )
@@ -104,6 +105,39 @@ class ControllerToolsTest(unittest.TestCase):
             return_value=client,
         ):
             result = list_controllers()
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_controller_operator_status_success(self) -> None:
+        client = Mock()
+        client.controllers.get_operator_status.return_value = {
+            "controller_id": "ctrl-001",
+            "status": "connected",
+        }
+
+        with patch(
+            "netskope_sdwan_mcp.tools.controllers.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_controller_operator_status("ctrl-001")
+
+        client.controllers.get_operator_status.assert_called_once_with("ctrl-001")
+        self.assertEqual(
+            result,
+            {"controller_id": "ctrl-001", "status": "connected"},
+        )
+
+    def test_get_controller_operator_status_sdk_error_path(self) -> None:
+        client = Mock()
+        client.controllers.get_operator_status.side_effect = APIResponseError("upstream failure")
+
+        with patch(
+            "netskope_sdwan_mcp.tools.controllers.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_controller_operator_status("ctrl-001")
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")

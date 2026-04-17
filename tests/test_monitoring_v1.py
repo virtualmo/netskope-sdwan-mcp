@@ -8,11 +8,17 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from netskope_sdwan_mcp.tools.monitoring_v1 import (
+    get_device_flows_totals,
+    get_devices_totals,
     get_interfaces_latest,
     get_paths_latest,
     get_paths_links_totals,
     get_routes_latest,
+    get_system_lte,
     get_system_load,
+    get_system_memory,
+    get_system_uptime,
+    get_system_wifi,
 )
 
 
@@ -21,6 +27,141 @@ class APIResponseError(Exception):
 
 
 class MonitoringV1ToolsTest(unittest.TestCase):
+    def test_get_device_flows_totals_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_device_flows_totals.return_value = {"flows": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_device_flows_totals(
+                "gw-123",
+                "192.0.2.10",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_device_flows_totals.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            ip="192.0.2.10",
+        )
+        self.assertEqual(result, {"flows": []})
+
+    def test_get_device_flows_totals_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_device_flows_totals.return_value = {"flows": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_device_flows_totals(
+                "gw-123",
+                "192.0.2.10",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+            )
+
+        client.v1.monitoring.get_device_flows_totals.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            ip="192.0.2.10",
+        )
+        self.assertEqual(result, {"flows": []})
+
+    def test_get_device_flows_totals_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_device_flows_totals.side_effect = APIResponseError(
+            "device flows unavailable"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_device_flows_totals(
+                "gw-123",
+                "192.0.2.10",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_devices_totals_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_devices_totals.return_value = {"devices": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_devices_totals(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_devices_totals.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+        )
+        self.assertEqual(result, {"devices": []})
+
+    def test_get_devices_totals_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_devices_totals.return_value = {"devices": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_devices_totals(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+            )
+
+        client.v1.monitoring.get_devices_totals.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+        )
+        self.assertEqual(result, {"devices": []})
+
+    def test_get_devices_totals_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_devices_totals.side_effect = APIResponseError(
+            "devices unavailable"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_devices_totals(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
     def test_get_interfaces_latest_success(self) -> None:
         client = Mock()
         client.v1.monitoring.get_interfaces_latest.return_value = [
@@ -252,6 +393,274 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             return_value=client,
         ):
             result = get_paths_links_totals("gw-123")
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_system_lte_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_lte.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_lte(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_system_lte.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=None,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_lte_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_lte.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_lte(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+                time_slots=24,
+            )
+
+        client.v1.monitoring.get_system_lte.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=24,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_lte_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_lte.side_effect = APIResponseError("lte unavailable")
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_lte(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_system_memory_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_memory.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_memory(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_system_memory.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=None,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_memory_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_memory.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_memory(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+                time_slots=12,
+            )
+
+        client.v1.monitoring.get_system_memory.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=12,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_memory_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_memory.side_effect = APIResponseError(
+            "memory unavailable"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_memory(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_system_uptime_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_uptime.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_uptime(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_system_uptime.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=None,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_uptime_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_uptime.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_uptime(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+                time_slots=6,
+            )
+
+        client.v1.monitoring.get_system_uptime.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=6,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_uptime_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_uptime.side_effect = APIResponseError(
+            "uptime unavailable"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_uptime(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_system_wifi_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_wifi.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_wifi(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
+
+        client.v1.monitoring.get_system_wifi.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=None,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_wifi_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_wifi.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_wifi(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+                child_tenant_id="tenant-child-1",
+                time_slots=48,
+            )
+
+        client.v1.monitoring.get_system_wifi.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-17T00:00:00Z",
+            end_datetime="2026-04-17T23:59:59Z",
+            time_slots=48,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_system_wifi_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_system_wifi.side_effect = APIResponseError("wifi unavailable")
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_system_wifi(
+                "gw-123",
+                "2026-04-17T00:00:00Z",
+                "2026-04-17T23:59:59Z",
+            )
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")

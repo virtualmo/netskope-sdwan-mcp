@@ -60,6 +60,7 @@ class SmokeTest(unittest.TestCase):
                 "list_gateways",
                 "list_address_groups",
                 "get_address_group",
+                "list_address_group_objects",
                 "list_device_groups",
                 "get_device_group",
                 "list_client_templates",
@@ -74,8 +75,13 @@ class SmokeTest(unittest.TestCase):
                 "get_controller_operator",
                 "list_controllers",
                 "get_controller",
+                "get_controller_operator_status",
                 "list_gateway_templates",
                 "get_gateway_template",
+                "list_inventory_devices",
+                "get_jwks",
+                "list_software_versions",
+                "list_software_downloads",
                 "list_ntp_configs",
                 "get_ntp_config",
                 "list_overlay_tags",
@@ -87,18 +93,37 @@ class SmokeTest(unittest.TestCase):
                 "list_vpn_peers",
                 "get_vpn_peer",
                 "get_gateway",
+                "get_gateway_telemetry_overview",
                 "get_gateway_operational_snapshot",
                 "list_gateway_groups",
                 "get_gateway_group",
                 "list_segments",
                 "get_segment",
+                "list_site_commands",
+                "get_site_command",
+                "get_site_command_output",
                 "list_applications",
+                "list_application_categories",
+                "list_qosmos_apps",
+                "list_webroot_categories",
                 "get_application",
                 "list_audit_events",
+                "list_edges",
+                "get_edge",
+                "list_edge_interfaces",
+                "get_edge_interface",
+                "list_gateway_interfaces",
+                "get_gateway_interface",
                 "get_interfaces_latest",
                 "get_paths_latest",
                 "get_routes_latest",
+                "get_device_flows_totals",
+                "get_devices_totals",
                 "get_system_load",
+                "get_system_lte",
+                "get_system_memory",
+                "get_system_uptime",
+                "get_system_wifi",
                 "get_paths_links_totals",
                 "list_tenants",
                 "get_tenant",
@@ -106,12 +131,14 @@ class SmokeTest(unittest.TestCase):
                 "get_user",
                 "list_user_groups",
                 "get_user_group",
+                "get_v1_user_groups",
                 "list_sites",
                 "list_alerts",
             ),
         )
         self.assertTrue(callable(server.registered_tools["list_address_groups"]))
         self.assertTrue(callable(server.registered_tools["get_address_group"]))
+        self.assertTrue(callable(server.registered_tools["list_address_group_objects"]))
         self.assertTrue(callable(server.registered_tools["list_device_groups"]))
         self.assertTrue(callable(server.registered_tools["get_device_group"]))
         self.assertTrue(callable(server.registered_tools["list_client_templates"]))
@@ -126,8 +153,13 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_controller_operator"]))
         self.assertTrue(callable(server.registered_tools["list_controllers"]))
         self.assertTrue(callable(server.registered_tools["get_controller"]))
+        self.assertTrue(callable(server.registered_tools["get_controller_operator_status"]))
         self.assertTrue(callable(server.registered_tools["list_gateway_templates"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_template"]))
+        self.assertTrue(callable(server.registered_tools["list_inventory_devices"]))
+        self.assertTrue(callable(server.registered_tools["get_jwks"]))
+        self.assertTrue(callable(server.registered_tools["list_software_versions"]))
+        self.assertTrue(callable(server.registered_tools["list_software_downloads"]))
         self.assertTrue(callable(server.registered_tools["list_ntp_configs"]))
         self.assertTrue(callable(server.registered_tools["get_ntp_config"]))
         self.assertTrue(callable(server.registered_tools["list_overlay_tags"]))
@@ -140,18 +172,37 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_vpn_peer"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
+        self.assertTrue(callable(server.registered_tools["get_gateway_telemetry_overview"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_operational_snapshot"]))
         self.assertTrue(callable(server.registered_tools["list_gateway_groups"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_group"]))
         self.assertTrue(callable(server.registered_tools["list_segments"]))
         self.assertTrue(callable(server.registered_tools["get_segment"]))
+        self.assertTrue(callable(server.registered_tools["list_site_commands"]))
+        self.assertTrue(callable(server.registered_tools["get_site_command"]))
+        self.assertTrue(callable(server.registered_tools["get_site_command_output"]))
         self.assertTrue(callable(server.registered_tools["list_applications"]))
+        self.assertTrue(callable(server.registered_tools["list_application_categories"]))
+        self.assertTrue(callable(server.registered_tools["list_qosmos_apps"]))
+        self.assertTrue(callable(server.registered_tools["list_webroot_categories"]))
         self.assertTrue(callable(server.registered_tools["get_application"]))
         self.assertTrue(callable(server.registered_tools["list_audit_events"]))
+        self.assertTrue(callable(server.registered_tools["list_edges"]))
+        self.assertTrue(callable(server.registered_tools["get_edge"]))
+        self.assertTrue(callable(server.registered_tools["list_edge_interfaces"]))
+        self.assertTrue(callable(server.registered_tools["get_edge_interface"]))
+        self.assertTrue(callable(server.registered_tools["list_gateway_interfaces"]))
+        self.assertTrue(callable(server.registered_tools["get_gateway_interface"]))
         self.assertTrue(callable(server.registered_tools["get_interfaces_latest"]))
         self.assertTrue(callable(server.registered_tools["get_paths_latest"]))
         self.assertTrue(callable(server.registered_tools["get_routes_latest"]))
+        self.assertTrue(callable(server.registered_tools["get_device_flows_totals"]))
+        self.assertTrue(callable(server.registered_tools["get_devices_totals"]))
         self.assertTrue(callable(server.registered_tools["get_system_load"]))
+        self.assertTrue(callable(server.registered_tools["get_system_lte"]))
+        self.assertTrue(callable(server.registered_tools["get_system_memory"]))
+        self.assertTrue(callable(server.registered_tools["get_system_uptime"]))
+        self.assertTrue(callable(server.registered_tools["get_system_wifi"]))
         self.assertTrue(callable(server.registered_tools["get_paths_links_totals"]))
         self.assertTrue(callable(server.registered_tools["list_tenants"]))
         self.assertTrue(callable(server.registered_tools["get_tenant"]))
@@ -159,6 +210,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_user"]))
         self.assertTrue(callable(server.registered_tools["list_user_groups"]))
         self.assertTrue(callable(server.registered_tools["get_user_group"]))
+        self.assertTrue(callable(server.registered_tools["get_v1_user_groups"]))
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from netskope_sdwan_mcp.errors import ConfigurationError
 from netskope_sdwan_mcp.tools.gateways import (
     get_gateway,
+    get_gateway_telemetry_overview,
     get_gateway_operational_snapshot,
     list_gateways,
     serialize_gateway,
@@ -96,6 +97,25 @@ class GatewayToolsTest(unittest.TestCase):
         self.assertEqual(result["id"], "gw-001")
         self.assertEqual(result["name"], "Branch Gateway 1")
         self.assertEqual(result["overlay_id"], "overlay-1")
+
+    def test_get_gateway_telemetry_overview_success(self) -> None:
+        client = Mock()
+        client.gateways.get_telemetry_overview.return_value = {
+            "cpu": {"current": 17.5},
+            "memory": {"current": 62.0},
+        }
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_telemetry_overview("gw-001")
+
+        client.gateways.get_telemetry_overview.assert_called_once_with("gw-001")
+        self.assertEqual(
+            result,
+            {
+                "cpu": {"current": 17.5},
+                "memory": {"current": 62.0},
+            },
+        )
 
     def test_get_gateway_operational_snapshot_success(self) -> None:
         client = Mock()
@@ -206,6 +226,17 @@ class GatewayToolsTest(unittest.TestCase):
             result["error"]["message"],
             "Authentication failed for the Netskope SD-WAN API.",
         )
+
+    def test_get_gateway_telemetry_overview_sdk_error_path(self) -> None:
+        client = Mock()
+        client.gateways.get_telemetry_overview.side_effect = APIResponseError("upstream failure")
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = get_gateway_telemetry_overview("gw-001")
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
 
     def test_get_gateway_operational_snapshot_error_path(self) -> None:
         client = Mock()

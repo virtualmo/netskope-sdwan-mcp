@@ -59,6 +59,50 @@ def get_routes_latest(
         return _serialize_sdk_error(exc)
 
 
+def get_device_flows_totals(
+    gateway_id: str,
+    ip: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch device flow totals for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_device_flows_totals(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                ip=ip,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_devices_totals(
+    gateway_id: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch device totals for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_devices_totals(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_system_load(
     gateway_id: str,
     child_tenant_id: str | None = None,
@@ -71,6 +115,98 @@ def get_system_load(
         client = build_sdk_client()
         return _serialize_monitoring_payload(
             client.v1.monitoring.get_system_load(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_system_lte(
+    gateway_id: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch system LTE history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_system_lte(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_system_memory(
+    gateway_id: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch system memory history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_system_memory(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_system_uptime(
+    gateway_id: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch system uptime history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_system_uptime(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
+def get_system_wifi(
+    gateway_id: str,
+    start_datetime: str,
+    end_datetime: str,
+    child_tenant_id: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch system Wi-Fi history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_system_wifi(
                 gateway_id,
                 child_tenant_id=child_tenant_id,
                 start_datetime=start_datetime,

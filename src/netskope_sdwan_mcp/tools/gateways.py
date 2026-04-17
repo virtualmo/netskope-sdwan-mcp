@@ -29,6 +29,17 @@ def get_gateway(id: str) -> dict[str, Any]:
         return _serialize_sdk_error(exc)
 
 
+def get_gateway_telemetry_overview(gateway_id: str) -> dict[str, Any]:
+    """Fetch gateway telemetry overview through the SDK and return JSON-serializable data."""
+    try:
+        client = build_sdk_client()
+        return _serialize_gateway_telemetry_overview(
+            client.gateways.get_telemetry_overview(gateway_id)
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_gateway_operational_snapshot(
     id: str,
     child_tenant_id: str | None = None,
@@ -96,6 +107,18 @@ def _serialize_monitoring_payload(
     if isinstance(payload, list):
         return [dict(item) for item in payload]
     return payload
+
+
+def _serialize_gateway_telemetry_overview(payload: dict[str, Any]) -> dict[str, Any]:
+    if isinstance(payload, dict):
+        return dict(payload)
+    return {
+        "status": "error",
+        "error": {
+            "type": "TypeError",
+            "message": "Gateway telemetry overview payload must be a JSON object.",
+        },
+    }
 
 
 def _serialize_sdk_error(exc: Exception) -> dict[str, Any]:

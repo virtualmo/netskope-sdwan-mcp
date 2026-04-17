@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from netskope_sdwan_mcp.tools.address_groups import (
     get_address_group,
+    list_address_group_objects,
     list_address_groups,
     serialize_address_group,
 )
@@ -81,6 +82,39 @@ class AddressGroupToolsTest(unittest.TestCase):
         self.assertEqual(result["name"], "HQ Addresses")
         self.assertEqual(result["scope"], "global")
 
+    def test_list_address_group_objects_success(self) -> None:
+        client = Mock()
+        client.address_groups.list_address_objects.return_value = [
+            FakeAddressGroup(
+                id="obj-001",
+                name="HQ Object",
+                raw={"id": "obj-001", "name": "HQ Object", "value": "10.0.0.0/24"},
+            ),
+            FakeAddressGroup(
+                id="obj-002",
+                name="Branch Object",
+                raw={"id": "obj-002", "name": "Branch Object"},
+            ),
+        ]
+
+        with patch(
+            "netskope_sdwan_mcp.tools.address_groups.build_sdk_client",
+            return_value=client,
+        ):
+            result = list_address_group_objects("ag-001", filter="name: HQ")
+
+        client.address_groups.list_address_objects.assert_called_once_with(
+            "ag-001",
+            filter="name: HQ",
+        )
+        self.assertEqual(
+            result,
+            [
+                {"id": "obj-001", "name": "HQ Object", "value": "10.0.0.0/24"},
+                {"id": "obj-002", "name": "Branch Object"},
+            ],
+        )
+
     def test_get_address_group_not_found_path(self) -> None:
         client = Mock()
         client.address_groups.get.side_effect = NotFoundError("address group not found")
@@ -104,6 +138,22 @@ class AddressGroupToolsTest(unittest.TestCase):
             return_value=client,
         ):
             result = list_address_groups()
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_list_address_group_objects_sdk_error_path(self) -> None:
+        client = Mock()
+        client.address_groups.list_address_objects.side_effect = APIResponseError(
+            "upstream failure"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.address_groups.build_sdk_client",
+            return_value=client,
+        ):
+            result = list_address_group_objects("ag-001")
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")
