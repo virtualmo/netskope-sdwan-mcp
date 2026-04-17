@@ -1,11 +1,13 @@
 # netskope-sdwan-mcp
 
 Read-only Netskope SD-WAN MCP server backed by the Python SDK
-`netskope-sdwan-py-sdk`.
+[`netskope-sdwan-py-sdk`](https://github.com/virtualmo/netskope-sdwan-py-sdk).
 
 This repository is a thin MCP wrapper over the public SDK. It exposes
 read-only Netskope SD-WAN tools plus a few small composite tools for agent and
 GUI workflows. It does not make direct HTTP requests itself.
+
+This project is **not an official Netskope product**.
 
 ## Demo
 
@@ -193,3 +195,9 @@ Sensitive gateway credential endpoints are intentionally not exposed:
 The compact gateway summary tools are also intentionally designed to avoid
 returning large raw gateway configuration payloads unless you call the lower
 level gateway detail tools directly.
+
+## Disclaimer
+
+This project is unofficial and is not affiliated with, endorsed by, or supported by Netskope.
+
+The SDK is provided on an "as-is" basis without warranties of any kind. Users are responsible for validating functionality and suitability for their own use cases.
