@@ -335,8 +335,8 @@ def register_tools(server: Any) -> Any:
         )
 
     @server.tool(name="list_edges")
-    def _list_edges(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_edges(filter=filter)
+    def _list_edges() -> list[dict[str, Any]] | dict[str, Any]:
+        return list_edges()
 
     @server.tool(name="get_edge")
     def _get_edge(edge_id: str) -> dict[str, Any]:

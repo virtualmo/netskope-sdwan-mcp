@@ -66,13 +66,6 @@ class V1EdgeToolsTest(unittest.TestCase):
             ],
         )
 
-    def test_list_edges_rejects_unsupported_filter(self) -> None:
-        result = list_edges(filter="name: Branch")
-
-        self.assertEqual(result["status"], "invalid_request")
-        self.assertEqual(result["error"]["type"], "ValueError")
-        self.assertEqual(result["error"]["message"], "filter is not supported for list_edges.")
-
     def test_get_edge_success(self) -> None:
         client = Mock()
         client.v1.edges.get.return_value = FakeEdge(

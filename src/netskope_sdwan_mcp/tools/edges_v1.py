@@ -9,12 +9,9 @@ from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
 
 
-def list_edges(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_edges() -> list[dict[str, Any]] | dict[str, Any]:
     """List v1 edges through the SDK and return JSON-serializable data."""
     try:
-        if filter is not None:
-            raise ValueError("filter is not supported for list_edges.")
-
         client = build_sdk_client()
         edges = client.v1.edges.list()
         return [serialize_edge(edge) for edge in edges]
