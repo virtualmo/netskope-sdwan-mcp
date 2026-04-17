@@ -7,13 +7,26 @@ from typing import Any
 
 from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
+from ._pagination import build_list_kwargs
 
 
-def list_radius_servers(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_radius_servers(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List radius servers through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        radius_servers = client.radius_servers.list(filter=filter)
+        radius_servers = client.radius_servers.list(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_radius_server(item) for item in radius_servers]
     except Exception as exc:
         return _serialize_sdk_error(exc)

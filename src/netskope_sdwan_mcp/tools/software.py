@@ -7,23 +7,48 @@ from typing import Any
 
 from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
+from ._pagination import build_list_kwargs
 
 
-def list_software_versions(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_software_versions(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List software versions through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        software_versions = client.software.list_versions(filter=filter)
+        software_versions = client.software.list_versions(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_software_item(item) for item in software_versions]
     except Exception as exc:
         return _serialize_sdk_error(exc)
 
 
-def list_software_downloads(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_software_downloads(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List software downloads through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        software_downloads = client.software.list_downloads(filter=filter)
+        software_downloads = client.software.list_downloads(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_software_item(item) for item in software_downloads]
     except Exception as exc:
         return _serialize_sdk_error(exc)

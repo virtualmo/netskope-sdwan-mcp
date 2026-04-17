@@ -79,6 +79,16 @@ class AuditEventToolsTest(unittest.TestCase):
         self.assertEqual(result["error"]["type"], "ValueError")
         self.assertEqual(result["error"]["message"], "created_at_from is required")
 
+    def test_list_audit_events_missing_created_at_to_path(self) -> None:
+        result = list_audit_events(
+            created_at_from="2026-04-16T00:00:00Z",
+            created_at_to="",
+        )
+
+        self.assertEqual(result["status"], "invalid_request")
+        self.assertEqual(result["error"]["type"], "ValueError")
+        self.assertEqual(result["error"]["message"], "created_at_to is required")
+
     def test_list_audit_events_sdk_error_path(self) -> None:
         client = Mock()
         client.audit_events.list.side_effect = APIResponseError("upstream failure")

@@ -7,13 +7,26 @@ from typing import Any
 
 from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
+from ._pagination import build_list_kwargs
 
 
-def list_site_commands(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_site_commands(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List site commands through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        site_commands = client.site_commands.list(filter=filter)
+        site_commands = client.site_commands.list(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_site_command(item) for item in site_commands]
     except Exception as exc:
         return _serialize_sdk_error(exc)

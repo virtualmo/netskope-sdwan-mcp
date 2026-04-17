@@ -7,13 +7,26 @@ from typing import Any
 
 from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
+from ._pagination import build_list_kwargs
 
 
-def list_overlay_tags(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_overlay_tags(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List overlay tags through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        overlay_tags = client.overlay_tags.list(filter=filter)
+        overlay_tags = client.overlay_tags.list(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_overlay_tag(item) for item in overlay_tags]
     except Exception as exc:
         return _serialize_sdk_error(exc)

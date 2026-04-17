@@ -151,16 +151,26 @@ def register_tools(server: Any) -> Any:
     """Register real and placeholder read-only tool handlers on an MCP server."""
 
     @server.tool(name="list_gateways")
-    def _list_gateways(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_gateways(filter=filter)
+    def _list_gateways(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateways(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="list_gateways_with_status")
     def _list_gateways_with_status() -> list[dict[str, Any]] | dict[str, Any]:
         return list_gateways_with_status()
 
     @server.tool(name="list_address_groups")
-    def _list_address_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_address_groups(filter=filter)
+    def _list_address_groups(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_address_groups(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_address_group")
     def _get_address_group(id: str) -> dict[str, Any]:
@@ -170,60 +180,109 @@ def register_tools(server: Any) -> Any:
     def _list_address_group_objects(
         group_id: str,
         filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
     ) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_address_group_objects(group_id, filter=filter)
+        return list_address_group_objects(
+            group_id,
+            filter=filter,
+            after=after,
+            first=first,
+            sort=sort,
+        )
 
     @server.tool(name="list_device_groups")
-    def _list_device_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_device_groups(filter=filter)
+    def _list_device_groups(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_device_groups(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_device_group")
     def _get_device_group(id: str) -> dict[str, Any]:
         return get_device_group(id)
 
     @server.tool(name="list_client_templates")
-    def _list_client_templates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_client_templates(filter=filter)
+    def _list_client_templates(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_client_templates(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_client_template")
     def _get_client_template(id: str) -> dict[str, Any]:
         return get_client_template(id)
 
     @server.tool(name="list_cloud_accounts")
-    def _list_cloud_accounts(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_cloud_accounts(filter=filter)
+    def _list_cloud_accounts(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_cloud_accounts(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_cloud_account")
     def _get_cloud_account(id: str) -> dict[str, Any]:
         return get_cloud_account(id)
 
     @server.tool(name="list_ca_certificates")
-    def _list_ca_certificates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_ca_certificates(filter=filter)
+    def _list_ca_certificates(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_ca_certificates(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_ca_certificate")
     def _get_ca_certificate(id: str) -> dict[str, Any]:
         return get_ca_certificate(id)
 
     @server.tool(name="list_clients")
-    def _list_clients(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_clients(filter=filter)
+    def _list_clients(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_clients(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_client")
     def _get_client(id: str) -> dict[str, Any]:
         return get_client(id)
 
     @server.tool(name="list_controller_operators")
-    def _list_controller_operators(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_controller_operators(filter=filter)
+    def _list_controller_operators(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_controller_operators(
+            filter=filter,
+            after=after,
+            first=first,
+            sort=sort,
+        )
 
     @server.tool(name="get_controller_operator")
     def _get_controller_operator(id: str) -> dict[str, Any]:
         return get_controller_operator(id)
 
     @server.tool(name="list_controllers")
-    def _list_controllers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_controllers(filter=filter)
+    def _list_controllers(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_controllers(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_controller")
     def _get_controller(id: str) -> dict[str, Any]:
@@ -234,64 +293,114 @@ def register_tools(server: Any) -> Any:
         return get_controller_operator_status(controller_id)
 
     @server.tool(name="list_gateway_templates")
-    def _list_gateway_templates(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_gateway_templates(filter=filter)
+    def _list_gateway_templates(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateway_templates(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_gateway_template")
     def _get_gateway_template(id: str) -> dict[str, Any]:
         return get_gateway_template(id)
 
     @server.tool(name="list_inventory_devices")
-    def _list_inventory_devices(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_inventory_devices(filter=filter)
+    def _list_inventory_devices(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_inventory_devices(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_jwks")
     def _get_jwks() -> dict[str, Any]:
         return get_jwks()
 
     @server.tool(name="list_software_versions")
-    def _list_software_versions(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_software_versions(filter=filter)
+    def _list_software_versions(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_software_versions(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="list_software_downloads")
-    def _list_software_downloads(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_software_downloads(filter=filter)
+    def _list_software_downloads(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_software_downloads(
+            filter=filter,
+            after=after,
+            first=first,
+            sort=sort,
+        )
 
     @server.tool(name="list_ntp_configs")
-    def _list_ntp_configs(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_ntp_configs(filter=filter)
+    def _list_ntp_configs(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_ntp_configs(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_ntp_config")
     def _get_ntp_config(id: str) -> dict[str, Any]:
         return get_ntp_config(id)
 
     @server.tool(name="list_overlay_tags")
-    def _list_overlay_tags(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_overlay_tags(filter=filter)
+    def _list_overlay_tags(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_overlay_tags(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_overlay_tag")
     def _get_overlay_tag(id: str) -> dict[str, Any]:
         return get_overlay_tag(id)
 
     @server.tool(name="list_policies")
-    def _list_policies(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_policies(filter=filter)
+    def _list_policies(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_policies(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_policy")
     def _get_policy(id: str) -> dict[str, Any]:
         return get_policy(id)
 
     @server.tool(name="list_radius_servers")
-    def _list_radius_servers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_radius_servers(filter=filter)
+    def _list_radius_servers(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_radius_servers(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_radius_server")
     def _get_radius_server(id: str) -> dict[str, Any]:
         return get_radius_server(id)
 
     @server.tool(name="list_vpn_peers")
-    def _list_vpn_peers(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_vpn_peers(filter=filter)
+    def _list_vpn_peers(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_vpn_peers(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_vpn_peer")
     def _get_vpn_peer(id: str) -> dict[str, Any]:
@@ -320,24 +429,39 @@ def register_tools(server: Any) -> Any:
         )
 
     @server.tool(name="list_gateway_groups")
-    def _list_gateway_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_gateway_groups(filter=filter)
+    def _list_gateway_groups(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateway_groups(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_gateway_group")
     def _get_gateway_group(id: str) -> dict[str, Any]:
         return get_gateway_group(id)
 
     @server.tool(name="list_segments")
-    def _list_segments(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_segments(filter=filter)
+    def _list_segments(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_segments(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_segment")
     def _get_segment(id: str) -> dict[str, Any]:
         return get_segment(id)
 
     @server.tool(name="list_site_commands")
-    def _list_site_commands(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_site_commands(filter=filter)
+    def _list_site_commands(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_site_commands(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_site_command")
     def _get_site_command(command_id: str) -> dict[str, Any]:
@@ -348,20 +472,50 @@ def register_tools(server: Any) -> Any:
         return get_site_command_output(command_id, name)
 
     @server.tool(name="list_applications")
-    def _list_applications(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_applications(filter=filter)
+    def _list_applications(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_applications(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="list_application_categories")
-    def _list_application_categories() -> list[dict[str, Any]] | dict[str, Any]:
-        return list_application_categories()
+    def _list_application_categories(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_application_categories(
+            filter=filter,
+            after=after,
+            first=first,
+            sort=sort,
+        )
 
     @server.tool(name="list_qosmos_apps")
-    def _list_qosmos_apps(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_qosmos_apps(filter=filter)
+    def _list_qosmos_apps(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_qosmos_apps(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="list_webroot_categories")
-    def _list_webroot_categories() -> list[dict[str, Any]] | dict[str, Any]:
-        return list_webroot_categories()
+    def _list_webroot_categories(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_webroot_categories(
+            filter=filter,
+            after=after,
+            first=first,
+            sort=sort,
+        )
 
     @server.tool(name="get_application")
     def _get_application(id: str) -> dict[str, Any]:
@@ -588,24 +742,39 @@ def register_tools(server: Any) -> Any:
         )
 
     @server.tool(name="list_tenants")
-    def _list_tenants(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_tenants(filter=filter)
+    def _list_tenants(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_tenants(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_tenant")
     def _get_tenant(id: str) -> dict[str, Any]:
         return get_tenant(id)
 
     @server.tool(name="list_users")
-    def _list_users(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_users(filter=filter)
+    def _list_users(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_users(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_user")
     def _get_user(id: str) -> dict[str, Any]:
         return get_user(id)
 
     @server.tool(name="list_user_groups")
-    def _list_user_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
-        return list_user_groups(filter=filter)
+    def _list_user_groups(
+        filter: str = None,
+        after: str = None,
+        first: int = None,
+        sort: str = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return list_user_groups(filter=filter, after=after, first=first, sort=sort)
 
     @server.tool(name="get_user_group")
     def _get_user_group(id: str) -> dict[str, Any]:

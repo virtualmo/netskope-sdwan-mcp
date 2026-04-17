@@ -7,13 +7,26 @@ from typing import Any
 
 from ..client_factory import build_sdk_client
 from ..errors import serialize_tool_error
+from ._pagination import build_list_kwargs
 
 
-def list_tenants(filter: str | None = None) -> list[dict[str, Any]] | dict[str, Any]:
+def list_tenants(
+    filter: str | None = None,
+    after: str | None = None,
+    first: int | None = None,
+    sort: str | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """List tenants through the SDK and return JSON-serializable data."""
     try:
         client = build_sdk_client()
-        tenants = client.tenants.list(filter=filter)
+        tenants = client.tenants.list(
+            **build_list_kwargs(
+                filter=filter,
+                after=after,
+                first=first,
+                sort=sort,
+            ),
+        )
         return [serialize_tenant(item) for item in tenants]
     except Exception as exc:
         return _serialize_sdk_error(exc)
