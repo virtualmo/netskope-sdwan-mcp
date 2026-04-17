@@ -93,6 +93,7 @@ class SmokeTest(unittest.TestCase):
                 "get_gateway_template",
                 "list_inventory_devices",
                 "get_jwks",
+                "list_all",
                 "list_software_versions",
                 "list_software_downloads",
                 "list_ntp_configs",
@@ -173,6 +174,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_gateway_template"]))
         self.assertTrue(callable(server.registered_tools["list_inventory_devices"]))
         self.assertTrue(callable(server.registered_tools["get_jwks"]))
+        self.assertTrue(callable(server.registered_tools["list_all"]))
         self.assertTrue(callable(server.registered_tools["list_software_versions"]))
         self.assertTrue(callable(server.registered_tools["list_software_downloads"]))
         self.assertTrue(callable(server.registered_tools["list_ntp_configs"]))

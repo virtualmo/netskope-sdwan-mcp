@@ -131,6 +131,19 @@ SERVER_SIGNATURES = {
         "sort",
         "filter",
     ),
+    "list_all": (
+        "resource",
+        "filter",
+        "first",
+        "sort",
+        "limit",
+        "group_id",
+        "created_at_from",
+        "created_at_to",
+        "type",
+        "subtype",
+        "activity",
+    ),
 }
 
 

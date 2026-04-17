@@ -274,6 +274,24 @@ Example SDWAN Tenant token permissions used for SDK validation:
 ]
 ```
 
+### Pagination & Sorting
+
+All `list_*` tools support the following parameters (when supported by the underlying API):
+
+- `filter`: API filter string
+- `after`: cursor for pagination
+- `first`: number of results to return
+- `sort`: sort expression
+
+Example:
+
+```json
+{
+  "first": 50,
+  "after": "cursor_token",
+  "sort": "-created_at"
+}
+
 ## Disclaimer
 
 This project is unofficial and is not affiliated with, endorsed by, or supported by Netskope.

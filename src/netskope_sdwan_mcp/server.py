@@ -53,6 +53,7 @@ from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.gateway_templates import get_gateway_template, list_gateway_templates
 from .tools.inventory_devices import list_inventory_devices
 from .tools.jwks import get_jwks
+from .tools.list_all import list_all
 from .tools.monitoring_v1 import (
     get_device_flows_totals,
     get_devices_totals,
@@ -317,6 +318,34 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_jwks")
     def _get_jwks() -> dict[str, Any]:
         return get_jwks()
+
+    @server.tool(name="list_all")
+    def _list_all(
+        resource: str,
+        filter: str = None,
+        first: int = 100,
+        sort: str = None,
+        limit: int = None,
+        group_id: str = None,
+        created_at_from: str = None,
+        created_at_to: str = None,
+        type: str = None,
+        subtype: str = None,
+        activity: str = None,
+    ) -> dict[str, Any]:
+        return list_all(
+            resource=resource,
+            filter=filter,
+            first=first,
+            sort=sort,
+            limit=limit,
+            group_id=group_id,
+            created_at_from=created_at_from,
+            created_at_to=created_at_to,
+            type=type,
+            subtype=subtype,
+            activity=activity,
+        )
 
     @server.tool(name="list_software_versions")
     def _list_software_versions(
