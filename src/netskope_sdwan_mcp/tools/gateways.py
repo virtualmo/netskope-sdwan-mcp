@@ -19,6 +19,16 @@ def list_gateways(filter: str | None = None) -> list[dict[str, Any]] | dict[str,
         return _serialize_sdk_error(exc)
 
 
+def list_gateways_with_status() -> list[dict[str, Any]] | dict[str, Any]:
+    """List gateways with a compact composite status-oriented summary."""
+    try:
+        client = build_sdk_client()
+        gateways = client.gateways.list()
+        return [_build_gateway_status_summary(client, gateway) for gateway in gateways]
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_gateway(id: str) -> dict[str, Any]:
     """Fetch one gateway by ID through the SDK and return JSON-serializable data."""
     try:
@@ -138,6 +148,47 @@ def _build_gateway_status(gateway: Any, telemetry: dict[str, Any]) -> dict[str, 
         "software_upgraded_at": telemetry.get("software_upgraded_at"),
         "links_avg_score": telemetry.get("links_avg_score"),
     }
+
+
+def _build_gateway_status_summary(client: Any, gateway: Any) -> dict[str, Any]:
+    telemetry = _load_gateway_telemetry_overview_or_empty(client, gateway)
+    status_v2 = telemetry.get("status_v2")
+    if not isinstance(status_v2, dict):
+        status_v2 = {}
+
+    gateway_id = _get_gateway_field(gateway, "id")
+    return {
+        "gateway_id": gateway_id,
+        "name": _get_gateway_field(gateway, "name"),
+        "is_activated": _get_gateway_field(gateway, "is_activated"),
+        "status": status_v2.get("status"),
+        "conditions": status_v2.get("conditions"),
+        "software_version": telemetry.get("software_version"),
+        "software_upgraded_at": telemetry.get("software_upgraded_at"),
+        "links_avg_score": telemetry.get("links_avg_score"),
+        "city": _get_gateway_field(gateway, "city"),
+        "country": _get_gateway_field(gateway, "country"),
+        "role": _get_gateway_field(gateway, "role"),
+    }
+
+
+def _load_gateway_telemetry_overview_or_empty(client: Any, gateway: Any) -> dict[str, Any]:
+    gateway_id = _get_gateway_field(gateway, "id")
+    if gateway_id is None:
+        return {}
+
+    try:
+        return _serialize_gateway_telemetry_overview(
+            client.gateways.get_telemetry_overview(gateway_id)
+        )
+    except Exception:
+        return {}
+
+
+def _get_gateway_field(gateway: Any, field_name: str) -> Any:
+    if isinstance(gateway, dict):
+        return gateway.get(field_name)
+    return getattr(gateway, field_name, None)
 
 
 def _serialize_gateway_telemetry_overview(payload: dict[str, Any]) -> dict[str, Any]:

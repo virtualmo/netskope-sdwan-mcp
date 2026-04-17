@@ -58,6 +58,7 @@ class SmokeTest(unittest.TestCase):
             tuple(server.registered_tools.keys()),
             (
                 "list_gateways",
+                "list_gateways_with_status",
                 "list_address_groups",
                 "get_address_group",
                 "list_address_group_objects",
@@ -173,6 +174,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["list_vpn_peers"]))
         self.assertTrue(callable(server.registered_tools["get_vpn_peer"]))
         self.assertTrue(callable(server.registered_tools["list_gateways"]))
+        self.assertTrue(callable(server.registered_tools["list_gateways_with_status"]))
         self.assertTrue(callable(server.registered_tools["get_gateway"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_telemetry_overview"]))
         self.assertTrue(callable(server.registered_tools["get_gateway_status"]))

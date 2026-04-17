@@ -16,6 +16,7 @@ from netskope_sdwan_mcp.tools.gateways import (
     get_gateway_telemetry_overview,
     get_gateway_operational_snapshot,
     list_gateways,
+    list_gateways_with_status,
     serialize_gateway,
 )
 
@@ -98,6 +99,141 @@ class GatewayToolsTest(unittest.TestCase):
         self.assertEqual(result["id"], "gw-001")
         self.assertEqual(result["name"], "Branch Gateway 1")
         self.assertEqual(result["overlay_id"], "overlay-1")
+
+    def test_list_gateways_with_status_success(self) -> None:
+        client = Mock()
+        client.gateways.list.return_value = [
+            {
+                "id": "gw-001",
+                "name": "Branch Gateway 1",
+                "is_activated": True,
+                "city": "London",
+                "country": "GB",
+                "role": "hub",
+            },
+            {
+                "id": "gw-002",
+                "name": "Branch Gateway 2",
+                "is_activated": False,
+            },
+        ]
+        client.gateways.get_telemetry_overview.side_effect = [
+            {
+                "status_v2": {
+                    "status": "online",
+                    "conditions": [{"type": "wan", "status": "healthy"}],
+                },
+                "software_version": "10.2.1",
+                "software_upgraded_at": "2026-04-17T09:30:00Z",
+                "links_avg_score": 98.7,
+            },
+            {
+                "status_v2": {
+                    "status": "offline",
+                    "conditions": [{"type": "reachability", "status": "down"}],
+                },
+                "software_version": "10.1.0",
+                "software_upgraded_at": None,
+                "links_avg_score": 12.0,
+            },
+        ]
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = list_gateways_with_status()
+
+        client.gateways.list.assert_called_once_with()
+        self.assertEqual(client.gateways.get_telemetry_overview.call_count, 2)
+        self.assertEqual(
+            result,
+            [
+                {
+                    "gateway_id": "gw-001",
+                    "name": "Branch Gateway 1",
+                    "is_activated": True,
+                    "status": "online",
+                    "conditions": [{"type": "wan", "status": "healthy"}],
+                    "software_version": "10.2.1",
+                    "software_upgraded_at": "2026-04-17T09:30:00Z",
+                    "links_avg_score": 98.7,
+                    "city": "London",
+                    "country": "GB",
+                    "role": "hub",
+                },
+                {
+                    "gateway_id": "gw-002",
+                    "name": "Branch Gateway 2",
+                    "is_activated": False,
+                    "status": "offline",
+                    "conditions": [{"type": "reachability", "status": "down"}],
+                    "software_version": "10.1.0",
+                    "software_upgraded_at": None,
+                    "links_avg_score": 12.0,
+                    "city": None,
+                    "country": None,
+                    "role": None,
+                },
+            ],
+        )
+
+    def test_list_gateways_with_status_partial_telemetry_failure_keeps_item(self) -> None:
+        client = Mock()
+        client.gateways.list.return_value = [
+            {
+                "id": "gw-001",
+                "name": "Branch Gateway 1",
+                "is_activated": True,
+            },
+            {
+                "id": "gw-002",
+                "name": "Branch Gateway 2",
+                "is_activated": False,
+                "city": "Paris",
+            },
+        ]
+        client.gateways.get_telemetry_overview.side_effect = [
+            APIResponseError("upstream failure"),
+            {
+                "status_v2": {"status": "online", "conditions": []},
+                "software_version": "10.2.2",
+                "software_upgraded_at": "2026-04-18T09:30:00Z",
+                "links_avg_score": 87.5,
+            },
+        ]
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = list_gateways_with_status()
+
+        self.assertEqual(
+            result,
+            [
+                {
+                    "gateway_id": "gw-001",
+                    "name": "Branch Gateway 1",
+                    "is_activated": True,
+                    "status": None,
+                    "conditions": None,
+                    "software_version": None,
+                    "software_upgraded_at": None,
+                    "links_avg_score": None,
+                    "city": None,
+                    "country": None,
+                    "role": None,
+                },
+                {
+                    "gateway_id": "gw-002",
+                    "name": "Branch Gateway 2",
+                    "is_activated": False,
+                    "status": "online",
+                    "conditions": [],
+                    "software_version": "10.2.2",
+                    "software_upgraded_at": "2026-04-18T09:30:00Z",
+                    "links_avg_score": 87.5,
+                    "city": "Paris",
+                    "country": None,
+                    "role": None,
+                },
+            ],
+        )
 
     def test_get_gateway_telemetry_overview_success(self) -> None:
         client = Mock()
@@ -255,6 +391,17 @@ class GatewayToolsTest(unittest.TestCase):
 
         with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
             result = list_gateways()
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_list_gateways_with_status_list_error_path(self) -> None:
+        client = Mock()
+        client.gateways.list.side_effect = APIResponseError("upstream failure")
+
+        with patch("netskope_sdwan_mcp.tools.gateways.build_sdk_client", return_value=client):
+            result = list_gateways_with_status()
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")

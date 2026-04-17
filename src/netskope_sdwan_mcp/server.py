@@ -45,6 +45,7 @@ from .tools.gateways import (
     get_gateway_telemetry_overview,
     get_gateway_operational_snapshot,
     list_gateways,
+    list_gateways_with_status,
 )
 from .tools.gateway_groups import get_gateway_group, list_gateway_groups
 from .tools.gateway_templates import get_gateway_template, list_gateway_templates
@@ -105,6 +106,10 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="list_gateways")
     def _list_gateways(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
         return list_gateways(filter=filter)
+
+    @server.tool(name="list_gateways_with_status")
+    def _list_gateways_with_status() -> list[dict[str, Any]] | dict[str, Any]:
+        return list_gateways_with_status()
 
     @server.tool(name="list_address_groups")
     def _list_address_groups(filter: str = None) -> list[dict[str, Any]] | dict[str, Any]:
