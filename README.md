@@ -142,6 +142,13 @@ Example:
 
 Restart Claude Desktop after saving the file.
 
+> [!NOTE]
+> To avoid being prompted for each tool call during a session:  
+> **Customize → Connectors → `netskope-sdwan` → Tool Permissions → “Always Allow”**  
+>  
+> This disables per-call approval prompts for MCP tools.
+
+
 ## Gemini CLI setup
 
 Gemini CLI supports MCP servers through `mcpServers` in `settings.json`, or via
