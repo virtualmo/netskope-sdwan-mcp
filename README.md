@@ -67,6 +67,11 @@ Meaning:
 - `NETSKOPESDWAN_TIMEOUT`: request timeout in seconds, default `30`
 - `NETSKOPESDWAN_INSECURE`: set to `true` to disable TLS verification, default `false`
 
+## Transport
+
+- Local: ✅ stdio (Claude Desktop, Gemini CLI)
+- Remote: ❌ not supported yet
+
 ## Running locally
 
 Run the MCP server over stdio:
