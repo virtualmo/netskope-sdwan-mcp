@@ -124,6 +124,7 @@ class SmokeTest(unittest.TestCase):
                 "get_system_memory",
                 "get_system_uptime",
                 "get_system_wifi",
+                "get_paths_links",
                 "get_paths_links_totals",
                 "list_tenants",
                 "get_tenant",
@@ -203,6 +204,7 @@ class SmokeTest(unittest.TestCase):
         self.assertTrue(callable(server.registered_tools["get_system_memory"]))
         self.assertTrue(callable(server.registered_tools["get_system_uptime"]))
         self.assertTrue(callable(server.registered_tools["get_system_wifi"]))
+        self.assertTrue(callable(server.registered_tools["get_paths_links"]))
         self.assertTrue(callable(server.registered_tools["get_paths_links_totals"]))
         self.assertTrue(callable(server.registered_tools["list_tenants"]))
         self.assertTrue(callable(server.registered_tools["get_tenant"]))

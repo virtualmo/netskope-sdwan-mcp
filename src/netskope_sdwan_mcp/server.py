@@ -54,6 +54,7 @@ from .tools.monitoring_v1 import (
     get_devices_totals,
     get_interfaces_latest,
     get_paths_latest,
+    get_paths_links,
     get_paths_links_totals,
     get_routes_latest,
     get_system_lte,
@@ -494,6 +495,24 @@ def register_tools(server: Any) -> Any:
             start_datetime=start_datetime,
             end_datetime=end_datetime,
             child_tenant_id=child_tenant_id,
+            time_slots=time_slots,
+        )
+
+    @server.tool(name="get_paths_links")
+    def _get_paths_links(
+        gateway_id: str,
+        child_tenant_id: str = None,
+        start_datetime: str = None,
+        end_datetime: str = None,
+        metric: str = None,
+        time_slots: int = None,
+    ) -> list[dict[str, Any]] | dict[str, Any]:
+        return get_paths_links(
+            gateway_id,
+            child_tenant_id=child_tenant_id,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
+            metric=metric,
             time_slots=time_slots,
         )
 

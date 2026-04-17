@@ -12,6 +12,7 @@ from netskope_sdwan_mcp.tools.monitoring_v1 import (
     get_devices_totals,
     get_interfaces_latest,
     get_paths_latest,
+    get_paths_links,
     get_paths_links_totals,
     get_routes_latest,
     get_system_lte,
@@ -334,6 +335,71 @@ class MonitoringV1ToolsTest(unittest.TestCase):
             return_value=client,
         ):
             result = get_system_load("gw-123")
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["error"]["type"], "InternalError")
+        self.assertEqual(result["error"]["message"], "Unexpected error while processing request.")
+
+    def test_get_paths_links_success(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_paths_links.return_value = [
+            {"path_id": "path-1", "latency_ms": 14.2}
+        ]
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_paths_links("gw-123")
+
+        client.v1.monitoring.get_paths_links.assert_called_once_with(
+            "gw-123",
+            child_tenant_id=None,
+            start_datetime=None,
+            end_datetime=None,
+            metric=None,
+            time_slots=None,
+        )
+        self.assertEqual(result, [{"path_id": "path-1", "latency_ms": 14.2}])
+
+    def test_get_paths_links_argument_pass_through(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_paths_links.return_value = {"series": []}
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_paths_links(
+                "gw-123",
+                child_tenant_id="tenant-child-1",
+                start_datetime="2026-04-16T00:00:00Z",
+                end_datetime="2026-04-16T23:59:59Z",
+                metric="latency",
+                time_slots=24,
+            )
+
+        client.v1.monitoring.get_paths_links.assert_called_once_with(
+            "gw-123",
+            child_tenant_id="tenant-child-1",
+            start_datetime="2026-04-16T00:00:00Z",
+            end_datetime="2026-04-16T23:59:59Z",
+            metric="latency",
+            time_slots=24,
+        )
+        self.assertEqual(result, {"series": []})
+
+    def test_get_paths_links_sdk_error_path(self) -> None:
+        client = Mock()
+        client.v1.monitoring.get_paths_links.side_effect = APIResponseError(
+            "paths links unavailable"
+        )
+
+        with patch(
+            "netskope_sdwan_mcp.tools.monitoring_v1.build_sdk_client",
+            return_value=client,
+        ):
+            result = get_paths_links("gw-123")
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["error"]["type"], "InternalError")

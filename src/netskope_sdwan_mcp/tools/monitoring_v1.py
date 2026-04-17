@@ -218,6 +218,31 @@ def get_system_wifi(
         return _serialize_sdk_error(exc)
 
 
+def get_paths_links(
+    gateway_id: str,
+    child_tenant_id: str | None = None,
+    start_datetime: str | None = None,
+    end_datetime: str | None = None,
+    metric: str | None = None,
+    time_slots: int | None = None,
+) -> list[dict[str, Any]] | dict[str, Any]:
+    """Fetch WAN path/link history for one gateway."""
+    try:
+        client = build_sdk_client()
+        return _serialize_monitoring_payload(
+            client.v1.monitoring.get_paths_links(
+                gateway_id,
+                child_tenant_id=child_tenant_id,
+                start_datetime=start_datetime,
+                end_datetime=end_datetime,
+                metric=metric,
+                time_slots=time_slots,
+            )
+        )
+    except Exception as exc:
+        return _serialize_sdk_error(exc)
+
+
 def get_paths_links_totals(
     gateway_id: str,
     child_tenant_id: str | None = None,
