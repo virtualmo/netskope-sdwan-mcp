@@ -7,6 +7,12 @@ This repository is a thin MCP wrapper over the public SDK. It exposes
 read-only Netskope SD-WAN tools plus a few small composite tools for agent and
 GUI workflows. It does not make direct HTTP requests itself.
 
+## Demo
+
+See how to use natural language to query SD-WAN gateways, status, and link health via MCP:
+
+https://github.com/user-attachments/assets/20ff406c-3931-42a1-83a6-01ebc8321d4f
+
 ## Quick start
 
 ```bash
