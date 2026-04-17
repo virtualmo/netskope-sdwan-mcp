@@ -292,6 +292,9 @@ Example:
   "sort": "-created_at"
 }
 
+`list_all` Fetches multiple pages automatically for supported paginated resources. It supports the same paginated resource families already exposed by the MCP where the SDK provides cursor-based `.list(...)` behavior.
+
+
 ## Disclaimer
 
 This project is unofficial and is not affiliated with, endorsed by, or supported by Netskope.
