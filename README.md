@@ -15,33 +15,17 @@ See how to use natural language to query SD-WAN gateways, status, and link healt
 
 https://github.com/user-attachments/assets/20ff406c-3931-42a1-83a6-01ebc8321d4f
 
-## Quick start
-
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-
-export NETSKOPESDWAN_BASE_URL="https://your-sdwan-tenant.api.eu.infiot.net"
-export NETSKOPESDWAN_API_TOKEN="your-api-token"
-
-python -m netskope_sdwan_mcp.server
-```
-
-Python 3.11+ is required.
 
 ## Installation
 
 Clone the repository and install it in a virtual environment:
 
 ```bash
-git clone <YOUR_REPO_URL>
+git clone https://github.com/virtualmo/netskope-sdwan-mcp.git
 cd netskope-sdwan-mcp
 python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
+pip install -e .
 ```
 
 ## Environment variables
