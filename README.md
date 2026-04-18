@@ -1,3 +1,10 @@
+![Python](https://img.shields.io/pypi/pyversions/netskope-sdwan-mcp)
+[![License](https://img.shields.io/github/license/virtualmo/netskope-sdwan-mcp)](LICENSE)
+[![CI](https://github.com/virtualmo/netskope-sdwan-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/virtualmo/netskope-sdwan-mcp/actions)
+![Status](https://img.shields.io/badge/status-alpha-orange)
+![MCP](https://img.shields.io/badge/MCP-compatible-blue)
+[![Docs](https://img.shields.io/badge/docs-tools-blue)](./docs/tools.md)
+
 # netskope-sdwan-mcp
 
 Read-only Netskope SD-WAN MCP server backed by the Python SDK
@@ -7,7 +14,7 @@ This repository is a thin MCP wrapper over the public SDK. It exposes
 read-only Netskope SD-WAN tools plus a few small composite tools for agent and
 GUI workflows. It does not make direct HTTP requests itself.
 
-This project is **not an official Netskope product**.
+> ⚠️ **Disclaimer:** This project is not an official Netskope product.
 
 ## Demo
 

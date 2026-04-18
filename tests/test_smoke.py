@@ -45,7 +45,7 @@ class SmokeTest(unittest.TestCase):
         package = import_module("netskope_sdwan_mcp")
         self.assertEqual(package.__version__, "0.1.0")
 
-    def test_create_server_registers_placeholder_tools(self) -> None:
+    def test_create_server_registers_all_tools(self) -> None:
         fake_fastmcp_module = types.SimpleNamespace(FastMCP=FakeFastMCP)
         fake_mcp_module = types.ModuleType("mcp")
         fake_server_module = types.ModuleType("mcp.server")
@@ -148,8 +148,6 @@ class SmokeTest(unittest.TestCase):
                 "list_user_groups",
                 "get_user_group",
                 "get_v1_user_groups",
-                "list_sites",
-                "list_alerts",
             ),
         )
         self.assertTrue(callable(server.registered_tools["list_address_groups"]))
