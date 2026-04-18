@@ -6,8 +6,8 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 
 ## Summary
 
-- Total tools: 81
-- Categories: 30
+- Total tools: 79
+- Categories: 29
 
 ---
 
