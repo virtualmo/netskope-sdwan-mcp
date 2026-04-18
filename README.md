@@ -20,7 +20,7 @@ GUI workflows. It does not make direct HTTP requests itself.
 
 See how to use natural language to query SD-WAN gateways, status, and link health via MCP:
 
-https://github.com/user-attachments/assets/20ff406c-3931-42a1-83a6-01ebc8321d4f
+https://github.com/user-attachments/assets/8961501c-8903-4478-a32b-c39c2b21c443
 
 
 ## Installation
