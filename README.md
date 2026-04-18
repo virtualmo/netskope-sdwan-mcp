@@ -1,6 +1,6 @@
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)
-[![License](https://img.shields.io/github/license/virtualmo/netskope-sdwan-mcp)](LICENSE)
-[![CI](https://github.com/virtualmo/netskope-sdwan-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/virtualmo/netskope-sdwan-mcp/actions)
+![License](https://img.shields.io/github/license/virtualmo/netskope-sdwan-py-sdk)
+![CI](https://github.com/virtualmo/netskope-sdwan-py-sdk/actions/workflows/ci.yml/badge.svg)
 ![Status](https://img.shields.io/badge/status-alpha-orange)
 ![MCP](https://img.shields.io/badge/MCP-compatible-blue)
 [![Docs](https://img.shields.io/badge/docs-tools-blue)](./docs/tools.md)
