@@ -86,7 +86,6 @@ from .tools.users_v1 import get_v1_user_groups
 from .tools.vpn_peers import get_vpn_peer, list_vpn_peers
 
 SERVER_NAME = "netskope-sdwan-mcp"
-PLACEHOLDER_TOOL_NAMES = ("list_sites", "list_alerts")
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
 
@@ -812,12 +811,6 @@ def register_tools(server: Any) -> Any:
     @server.tool(name="get_v1_user_groups")
     def _get_v1_user_groups(user_id: str) -> list[dict[str, Any]] | dict[str, Any]:
         return get_v1_user_groups(user_id)
-
-    for tool_name in PLACEHOLDER_TOOL_NAMES:
-
-        @server.tool(name=tool_name)
-        def _placeholder_tool(tool_name: str = tool_name) -> dict[str, str]:
-            return {"status": "not_implemented", "tool": tool_name}
 
     return server
 

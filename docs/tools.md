@@ -42,7 +42,6 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - Monitoring (v1 legacy)
 - Edges (v1 legacy)
 - Resources (generic)
-- Placeholders / Not Implemented
 
 ---
 
@@ -965,21 +964,3 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `activity` (`str`, optional)
 - **Returns:** Aggregated response object containing `items`, `count`, `pages_fetched`, pagination metadata, and `next_after` when applicable.
 - **Notes:** Supports up to `first=100` per page and `limit=5000` overall. `group_id` is required for `address_group_objects`. `created_at_from` and `created_at_to` are required for `audit_events`.
-
-### Placeholders / Not Implemented
-
-#### `list_sites`
-
-- **Description:** Placeholder for listing sites.
-- **SDK Mapping:** Not mapped to an SDK method; placeholder defined in `server.py`
-- **Parameters:** None.
-- **Returns:** Status object with `status: not_implemented`.
-- **Notes:** Exposed by the server but not implemented.
-
-#### `list_alerts`
-
-- **Description:** Placeholder for listing alerts.
-- **SDK Mapping:** Not mapped to an SDK method; placeholder defined in `server.py`
-- **Parameters:** None.
-- **Returns:** Status object with `status: not_implemented`.
-- **Notes:** Exposed by the server but not implemented.
