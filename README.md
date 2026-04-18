@@ -198,9 +198,20 @@ gemini mcp add -s user \
 - `List gateways with status and highlight anything offline or degraded.`
 - `Get gateway status for gateway gw-001.`
 - `Get a gateway operational snapshot for gw-001.`
-- `List recent audit events from 2026-04-16T00:00:00Z to 2026-04-16T23:59:59Z.`
+- `List recent audit events from last 24 hours`
 - `Show the latest interfaces, paths, and routes for gateway gw-001.`
-- `List site commands and fetch the output for command cmd-001 and file output.txt.`
+
+## Supported Capabilities
+
+This MCP server provides access to Netskope SD-WAN resources, including:
+
+- Gateways (list, get, telemetry)
+- Policies and Segments
+- Device and Inventory management
+- Monitoring (v1 legacy endpoints)
+
+> Full tool reference: ./docs/tools.md
+
 
 ## Safety notes
 
