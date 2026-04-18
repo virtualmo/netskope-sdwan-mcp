@@ -210,7 +210,7 @@ This MCP server provides access to Netskope SD-WAN resources, including:
 - Device and Inventory management
 - Monitoring (v1 legacy endpoints)
 
-> Full tool reference: ./docs/tools.md
+> 📄 Full tool reference: [View all MCP tools](./docs/tools.md)
 
 
 ## Safety notes
