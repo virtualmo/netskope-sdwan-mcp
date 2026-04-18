@@ -1,4 +1,4 @@
-![Python](https://img.shields.io/pypi/pyversions/netskope-sdwan-mcp)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)
 [![License](https://img.shields.io/github/license/virtualmo/netskope-sdwan-mcp)](LICENSE)
 [![CI](https://github.com/virtualmo/netskope-sdwan-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/virtualmo/netskope-sdwan-mcp/actions)
 ![Status](https://img.shields.io/badge/status-alpha-orange)
