@@ -11,43 +11,41 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 
 ---
 
-## Tool Categories
+## Categories
 
-- Gateways
-- Gateway Groups
-- Gateway Templates
-- Policies
-- Segments
-- Applications
-- Address Groups
-- Device Groups
-- Clients
-- Client Templates
-- Controllers
-- Controller Operators
-- Inventory
-- Certificates
-- Cloud Accounts
-- NTP Configurations
-- Overlay Tags
-- Radius Servers
-- VPN Peers
-- Site Commands
-- Software
-- Tenants
-- Users
-- User Groups
-- JWKS
-- Audit Events
-- Monitoring (v1 legacy)
-- Edges (v1 legacy)
-- Resources (generic)
+- [Gateways](#gateways)
+- [Gateway Groups](#gateway-groups)
+- [Gateway Templates](#gateway-templates)
+- [Policies](#policies)
+- [Segments](#segments)
+- [Applications](#applications)
+- [Address Groups](#address-groups)
+- [Device Groups](#device-groups)
+- [Clients](#clients)
+- [Client Templates](#client-templates)
+- [Controllers](#controllers)
+- [Controller Operators](#controller-operators)
+- [Inventory](#inventory)
+- [Certificates](#certificates)
+- [Cloud Accounts](#cloud-accounts)
+- [NTP Configurations](#ntp-configurations)
+- [Overlay Tags](#overlay-tags)
+- [Radius Servers](#radius-servers)
+- [VPN Peers](#vpn-peers)
+- [Site Commands](#site-commands)
+- [Software](#software)
+- [Tenants](#tenants)
+- [Users](#users)
+- [User Groups](#user-groups)
+- [JWKS](#jwks)
+- [Audit Events](#audit-events)
+- [Monitoring (v1 legacy)](#monitoring-v1-legacy)
+- [Edges (v1 legacy)](#edges-v1-legacy)
+- [Generic Resource Pagination](#generic-resource-pagination)
 
 ---
 
-## Per-Category Sections
-
-### Gateways
+## Gateways
 
 #### `list_gateways`
 
@@ -104,7 +102,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** Composite object containing gateway details and latest monitoring snapshots.
 - **Notes:** Uses v1 monitoring endpoints under the hood.
 
-### Gateway Groups
+## Gateway Groups
 
 #### `list_gateway_groups`
 
@@ -126,7 +124,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Gateway group object.
 
-### Gateway Templates
+## Gateway Templates
 
 #### `list_gateway_templates`
 
@@ -148,7 +146,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Gateway template object.
 
-### Policies
+## Policies
 
 #### `list_policies`
 
@@ -170,7 +168,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Policy object.
 
-### Segments
+## Segments
 
 #### `list_segments`
 
@@ -192,7 +190,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Segment object.
 
-### Applications
+## Applications
 
 #### `list_applications`
 
@@ -250,7 +248,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Application object.
 
-### Address Groups
+## Address Groups
 
 #### `list_address_groups`
 
@@ -285,7 +283,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List of address object entries for the target group.
 - **Notes:** Standard paginated list wrapper scoped to one group.
 
-### Device Groups
+## Device Groups
 
 #### `list_device_groups`
 
@@ -307,7 +305,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Device group object.
 
-### Clients
+## Clients
 
 #### `list_clients`
 
@@ -329,7 +327,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Client object.
 
-### Client Templates
+## Client Templates
 
 #### `list_client_templates`
 
@@ -351,7 +349,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Client template object.
 
-### Controllers
+## Controllers
 
 #### `list_controllers`
 
@@ -381,7 +379,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `controller_id` (`str`, required)
 - **Returns:** Controller operator status object.
 
-### Controller Operators
+## Controller Operators
 
 #### `list_controller_operators`
 
@@ -403,7 +401,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Controller operator object.
 
-### Inventory
+## Inventory
 
 #### `list_inventory_devices`
 
@@ -417,7 +415,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List of inventory device objects.
 - **Notes:** Standard paginated list wrapper.
 
-### Certificates
+## Certificates
 
 #### `list_ca_certificates`
 
@@ -439,7 +437,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** CA certificate object.
 
-### Cloud Accounts
+## Cloud Accounts
 
 #### `list_cloud_accounts`
 
@@ -461,7 +459,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Cloud account object.
 
-### NTP Configurations
+## NTP Configurations
 
 #### `list_ntp_configs`
 
@@ -483,7 +481,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** NTP configuration object.
 
-### Overlay Tags
+## Overlay Tags
 
 #### `list_overlay_tags`
 
@@ -505,7 +503,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Overlay tag object.
 
-### Radius Servers
+## Radius Servers
 
 #### `list_radius_servers`
 
@@ -527,7 +525,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** RADIUS server object.
 
-### VPN Peers
+## VPN Peers
 
 #### `list_vpn_peers`
 
@@ -549,7 +547,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** VPN peer object.
 
-### Site Commands
+## Site Commands
 
 #### `list_site_commands`
 
@@ -580,7 +578,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `name` (`str`, required)
 - **Returns:** Site command output object, including decoded content when available.
 
-### Software
+## Software
 
 #### `list_software_versions`
 
@@ -606,7 +604,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List of software download objects.
 - **Notes:** Standard paginated list wrapper.
 
-### Tenants
+## Tenants
 
 #### `list_tenants`
 
@@ -628,7 +626,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** Tenant object.
 
-### Users
+## Users
 
 #### `list_users`
 
@@ -650,7 +648,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
   - `id` (`str`, required)
 - **Returns:** User object.
 
-### User Groups
+## User Groups
 
 #### `list_user_groups`
 
@@ -681,7 +679,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List of v1 user group objects.
 - **Notes:** Legacy v1 endpoint.
 
-### JWKS
+## JWKS
 
 #### `get_jwks`
 
@@ -690,7 +688,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Parameters:** None.
 - **Returns:** JWKS object.
 
-### Audit Events
+## Audit Events
 
 #### `list_audit_events`
 
@@ -709,7 +707,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List of audit event objects.
 - **Notes:** Requires both `created_at_from` and `created_at_to`.
 
-### Monitoring (v1 legacy)
+## Monitoring (v1 legacy)
 
 #### `get_interfaces_latest`
 
@@ -857,7 +855,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** List or object containing path or link totals.
 - **Notes:** Legacy v1 monitoring tool.
 
-### Edges (v1 legacy)
+## Edges (v1 legacy)
 
 #### `list_edges`
 
@@ -914,7 +912,7 @@ This document lists all MCP tools currently exposed by the Netskope SD-WAN MCP s
 - **Returns:** V1 gateway interface object.
 - **Notes:** Legacy v1 endpoint.
 
-### Resources (generic)
+## Generic Resource Pagination
 
 #### `list_all`
 

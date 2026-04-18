@@ -205,10 +205,12 @@ gemini mcp add -s user \
 
 This MCP server provides access to Netskope SD-WAN resources, including:
 
-- Gateways (list, get, telemetry)
-- Policies and Segments
-- Device and Inventory management
-- Monitoring (v1 legacy endpoints)
+- [Gateways](./docs/tools.md#gateways)
+- [Policies](./docs/tools.md#policies)
+- [Segments](./docs/tools.md#segments)
+- [Device Groups](./docs/tools.md#device-groups)
+- [Inventory](./docs/tools.md#inventory)
+- [Monitoring (v1 legacy)](./docs/tools.md#monitoring-v1-legacy)
 
 > 📄 Full tool reference: [View all MCP tools](./docs/tools.md)
 
